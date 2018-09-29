@@ -1,41 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example.sirjackovich.wguapp">
+    package="com.example.sirjackovich.wguapp" >
 
-  <application
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:theme="@style/AppTheme">
-    <activity android:name=".MainActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity android:name=".MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
-    <activity
-      android:name=".AssessmentActivity"
-      android:label="@string/title_activity_assessment"
-      android:parentActivityName=".MainActivity">
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".MainActivity" />
-    </activity>
-    <activity
-      android:name=".AssessmentDetailsActivity"
-      android:label="@string/assessment_details_text"
-      android:parentActivityName=".AssessmentActivity">
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".AssessmentActivity" />
-    </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".assessments.AssessmentsActivity"
+            android:label="@string/assessments_text"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".assessments.AssessmentDetailsActivity"
+            android:label="@string/assessment_details_text"
+            android:parentActivityName=".assessments.AssessmentsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".assessments.AssessmentsActivity" />
+        </activity>
 
-    <provider
-      android:name=".AssessmentsProvider"
-      android:authorities="com.example.sirjackovich.assessmentprovider"
-      android:exported="false" />
+        <provider
+            android:name=".assessments.AssessmentsProvider"
+            android:authorities="com.example.sirjackovich.assessmentsprovider"
+            android:exported="false" />
 
-  </application>
+        <activity
+            android:name=".mentors.MentorsActivity"
+            android:label="@string/mentors_text"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+          android:name=".mentors.MentorDetailsActivity"
+          android:label="@string/mentor_details_text"
+          android:parentActivityName=".mentors.MentorsActivity" >
+            <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".mentors.MentorsActivity" />
+        </activity>
+
+        <provider
+          android:name=".mentors.MentorsProvider"
+          android:authorities="com.example.sirjackovich.mentorsprovider"
+          android:exported="false" />
+    </application>
 
 </manifest>

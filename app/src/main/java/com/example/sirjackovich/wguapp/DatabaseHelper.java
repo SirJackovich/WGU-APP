@@ -25,6 +25,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       ASSESSMENT_DUE_DATE + " text, " +
       ASSESSMENT_CREATED + " text default CURRENT_TIMESTAMP)";
 
+  public static final String MENTORS_TABLE = "Mentors";
+  public static final String MENTOR_ID = "_id";
+  public static final String MENTOR_NAME = "name";
+  public static final String MENTOR_PHONE = "phone";
+  public static final String MENTOR_EMAIL = "email";
+  public static final String MENTOR_CREATED = "created";
+
+  public static final String[] MENTOR_COLUMNS = {MENTOR_ID, MENTOR_NAME, MENTOR_PHONE, MENTOR_EMAIL, MENTOR_CREATED};
+
+  private static final String CREATE_MENTORS_TABLE =
+    "create table " + MENTORS_TABLE + " ( " +
+      MENTOR_ID + " integer primary key autoincrement, " +
+      MENTOR_NAME + " text, " +
+      MENTOR_PHONE + " text, " +
+      MENTOR_EMAIL + " text, " +
+      MENTOR_CREATED + " text default CURRENT_TIMESTAMP)";
+
   public DatabaseHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
@@ -32,11 +49,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   @Override
   public void onCreate(SQLiteDatabase database) {
     database.execSQL(CREATE_ASSESSMENTS_TABLE);
+    database.execSQL(CREATE_MENTORS_TABLE);
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
     database.execSQL("drop table if exists " + ASSESSMENTS_TABLE);
+    database.execSQL("drop table if exists " + MENTORS_TABLE);
     onCreate(database);
   }
 }

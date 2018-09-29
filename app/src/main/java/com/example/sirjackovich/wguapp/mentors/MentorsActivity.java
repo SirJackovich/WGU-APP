@@ -1,7 +1,6 @@
-package com.example.sirjackovich.wguapp;
+package com.example.sirjackovich.wguapp.mentors;
 
 import android.app.LoaderManager;
-import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -9,28 +8,26 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.example.sirjackovich.wguapp.DatabaseHelper;
+import com.example.sirjackovich.wguapp.R;
 
-public class AssessmentActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+public class MentorsActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
   private CursorAdapter cursorAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_assessment);
+    setContentView(R.layout.activity_mentors);
 
-    insertAssessment("New Assessment");
-
-
-    String[] from = {DatabaseHelper.ASSESSMENT_TITLE};
+    String[] from = {DatabaseHelper.MENTOR_NAME};
     int[] to = {android.R.id.text1};
-
 
     cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, 0);
 
@@ -41,9 +38,9 @@ public class AssessmentActivity extends ActionBarActivity implements LoaderManag
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(AssessmentActivity.this, AssessmentDetailsActivity.class);
-        Uri uri = Uri.parse(AssessmentsProvider.CONTENT_URI + "/" + id);
-        intent.putExtra(AssessmentsProvider.CONTENT_ITEM_TYPE, uri);
+        Intent intent = new Intent(MentorsActivity.this, MentorDetailsActivity.class);
+        Uri uri = Uri.parse(MentorsProvider.CONTENT_URI + "/" + id);
+        intent.putExtra(MentorsProvider.CONTENT_ITEM_TYPE, uri);
         startActivityForResult(intent, 1);
       }
     });
@@ -51,21 +48,13 @@ public class AssessmentActivity extends ActionBarActivity implements LoaderManag
     getLoaderManager().initLoader(0, null, this);
   }
 
-  private void insertAssessment(String text) {
-    ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.ASSESSMENT_TITLE, text);
-    Uri assessmentUri = getContentResolver().insert(AssessmentsProvider.CONTENT_URI, values);
-    Log.d("AssessmentsActivity", "Inserted assessment " + assessmentUri.getLastPathSegment());
-  }
-
-
   private void restartLoader() {
     getLoaderManager().restartLoader(0, null, this);
   }
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    return new CursorLoader(this, AssessmentsProvider.CONTENT_URI,
+    return new CursorLoader(this, MentorsProvider.CONTENT_URI,
       null, null, null, null);
   }
 
@@ -79,8 +68,8 @@ public class AssessmentActivity extends ActionBarActivity implements LoaderManag
     cursorAdapter.swapCursor(null);
   }
 
-  public void createAssessment(View view) {
-    Intent intent = new Intent(this, AssessmentDetailsActivity.class);
+  public void createMentor(View view) {
+    Intent intent = new Intent(this, MentorDetailsActivity.class);
     startActivityForResult(intent, 1);
 
   }

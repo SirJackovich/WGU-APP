@@ -1,4 +1,4 @@
-package com.example.sirjackovich.wguapp;
+package com.example.sirjackovich.wguapp.assessments;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.example.sirjackovich.wguapp.DatabaseHelper;
+import com.example.sirjackovich.wguapp.R;
 
 public class AssessmentDetailsActivity extends AppCompatActivity {
   private EditText title;
@@ -23,8 +26,11 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_assessment_details);
 
-    // Setup the spinner
+
+    title = (EditText) findViewById(R.id.title_edit_text);
+    dueDate = (EditText) findViewById(R.id.due_date_edit_text);
     spinner = (Spinner) findViewById(R.id.type_spinner);
+
     // Create an ArrayAdapter using the string array and a default spinner layout
     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
       R.array.assessment_types, android.R.layout.simple_spinner_item);
@@ -32,9 +38,6 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     // Apply the adapter to the spinner
     spinner.setAdapter(adapter);
-
-    title = (EditText) findViewById(R.id.title_edit_text);
-    dueDate = (EditText) findViewById(R.id.due_date_edit_text);
 
     Intent intent = getIntent();
 
@@ -49,6 +52,8 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
       Cursor cursor = getContentResolver().query(uri, DatabaseHelper.ASSESSMENT_COLUMNS, assessmentFilter, null, null);
       cursor.moveToFirst();
       title.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_TITLE)));
+      spinner.setSelection(adapter.getPosition(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_TYPE))));
+      dueDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_DUE_DATE)));
     }
   }
 
@@ -63,35 +68,30 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
   }
 
   public void handleSave(View view) {
-    String newTitle = title.getText().toString().trim();
     switch (action) {
       case Intent.ACTION_INSERT:
-        if (newTitle.length() == 0) {
-          setResult(RESULT_CANCELED);
-        } else {
-          insertAssessment(newTitle);
-        }
+        insertAssessment();
         break;
       case Intent.ACTION_EDIT:
-        if (newTitle.length() == 0) {
-          deleteAssessment();
-        } else {
-          updateAssessment(newTitle);
-        }
+        updateAssessment();
     }
     finish();
   }
 
-  private void updateAssessment(String text) {
+  private void updateAssessment() {
     ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.ASSESSMENT_TITLE, text);
+    values.put(DatabaseHelper.ASSESSMENT_TITLE, title.getText().toString().trim());
+    values.put(DatabaseHelper.ASSESSMENT_TYPE, spinner.getSelectedItem().toString().trim());
+    values.put(DatabaseHelper.ASSESSMENT_DUE_DATE, dueDate.getText().toString().trim());
     getContentResolver().update(AssessmentsProvider.CONTENT_URI, values, assessmentFilter, null);
     setResult(RESULT_OK);
   }
 
-  private void insertAssessment(String text) {
+  private void insertAssessment() {
     ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.ASSESSMENT_TITLE, text);
+    values.put(DatabaseHelper.ASSESSMENT_TITLE, title.getText().toString().trim());
+    values.put(DatabaseHelper.ASSESSMENT_TYPE, spinner.getSelectedItem().toString().trim());
+    values.put(DatabaseHelper.ASSESSMENT_DUE_DATE, dueDate.getText().toString().trim());
     getContentResolver().insert(AssessmentsProvider.CONTENT_URI, values);
     setResult(RESULT_OK);
   }

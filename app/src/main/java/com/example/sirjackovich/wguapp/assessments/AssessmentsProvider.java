@@ -1,4 +1,4 @@
-package com.example.sirjackovich.wguapp;
+package com.example.sirjackovich.wguapp.assessments;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -7,9 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+import com.example.sirjackovich.wguapp.DatabaseHelper;
+
 public class AssessmentsProvider extends ContentProvider {
 
-  private static final String AUTHORITY = "com.example.sirjackovich.assessmentprovider";
+  private static final String AUTHORITY = "com.example.sirjackovich.assessmentsprovider";
   private static final String BASE_PATH = "Assessments";
   public static final Uri CONTENT_URI =
     Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);

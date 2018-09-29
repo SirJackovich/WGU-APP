@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
+import com.example.sirjackovich.wguapp.assessments.AssessmentsActivity;
+import com.example.sirjackovich.wguapp.mentors.MentorsActivity;
+
 public class MainActivity extends ActionBarActivity {
 
   @Override
@@ -14,7 +17,12 @@ public class MainActivity extends ActionBarActivity {
   }
 
   public void showAssessments(View view) {
-    showActivity(AssessmentActivity.class);
+    showActivity(AssessmentsActivity.class);
+  }
+
+
+  public void showMentors(View view) {
+    showActivity(MentorsActivity.class);
   }
 
   public void showActivity(Class activityClass) {
