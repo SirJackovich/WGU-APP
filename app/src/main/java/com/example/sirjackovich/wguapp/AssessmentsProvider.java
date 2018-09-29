@@ -9,63 +9,63 @@ import android.net.Uri;
 
 public class AssessmentsProvider extends ContentProvider {
 
-    private static final String AUTHORITY = "com.example.sirjackovich.assessmentprovider";
-    private static final String BASE_PATH = "Assessments";
-    public static final Uri CONTENT_URI =
-            Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
+  private static final String AUTHORITY = "com.example.sirjackovich.assessmentprovider";
+  private static final String BASE_PATH = "Assessments";
+  public static final Uri CONTENT_URI =
+    Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
 
-    private static final int ASSESSMENTS = 1;
-    private static final int ASSESSMENT_ID = 2;
+  private static final int ASSESSMENTS = 1;
+  private static final int ASSESSMENT_ID = 2;
 
-    private static final UriMatcher uriMatcher =
-            new UriMatcher(UriMatcher.NO_MATCH);
+  private static final UriMatcher uriMatcher =
+    new UriMatcher(UriMatcher.NO_MATCH);
 
-    public static final String CONTENT_ITEM_TYPE = "Assessment";
+  public static final String CONTENT_ITEM_TYPE = "Assessment";
 
-    static {
-        uriMatcher.addURI(AUTHORITY, BASE_PATH, ASSESSMENTS);
-        uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", ASSESSMENT_ID);
+  static {
+    uriMatcher.addURI(AUTHORITY, BASE_PATH, ASSESSMENTS);
+    uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", ASSESSMENT_ID);
+  }
+
+  private SQLiteDatabase database;
+
+  @Override
+  public boolean onCreate() {
+    DatabaseHelper helper = new DatabaseHelper(getContext());
+    database = helper.getWritableDatabase();
+    return true;
+  }
+
+  @Override
+  public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+
+    if (uriMatcher.match(uri) == ASSESSMENT_ID) {
+      selection = DatabaseHelper.ASSESSMENT_ID + "=" + uri.getLastPathSegment();
     }
 
-    private SQLiteDatabase database;
+    return database.query(DatabaseHelper.ASSESSMENTS_TABLE, DatabaseHelper.ASSESSMENT_COLUMNS,
+      selection, null, null, null,
+      DatabaseHelper.ASSESSMENT_CREATED + " DESC");
+  }
 
-    @Override
-    public boolean onCreate() {
-        DatabaseHelper helper = new DatabaseHelper(getContext());
-        database = helper.getWritableDatabase();
-        return true;
-    }
+  @Override
+  public String getType(Uri uri) {
+    return null;
+  }
 
-    @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+  @Override
+  public Uri insert(Uri uri, ContentValues values) {
+    long id = database.insert(DatabaseHelper.ASSESSMENTS_TABLE, null, values);
+    return Uri.parse(BASE_PATH + "/" + id);
+  }
 
-        if (uriMatcher.match(uri) == ASSESSMENT_ID) {
-            selection = DatabaseHelper.ASSESSMENT_ID + "=" + uri.getLastPathSegment();
-        }
+  @Override
+  public int delete(Uri uri, String selection, String[] selectionArgs) {
+    return database.delete(DatabaseHelper.ASSESSMENTS_TABLE, selection, selectionArgs);
+  }
 
-        return database.query(DatabaseHelper.ASSESSMENTS_TABLE, DatabaseHelper.ASSESSMENT_COLUMNS,
-                selection, null, null, null,
-                DatabaseHelper.ASSESSMENT_CREATED + " DESC");
-    }
-
-    @Override
-    public String getType(Uri uri) {
-        return null;
-    }
-
-    @Override
-    public Uri insert(Uri uri, ContentValues values) {
-        long id = database.insert(DatabaseHelper.ASSESSMENTS_TABLE, null, values);
-        return Uri.parse(BASE_PATH + "/" + id);
-    }
-
-    @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return database.delete(DatabaseHelper.ASSESSMENTS_TABLE, selection, selectionArgs);
-    }
-
-    @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return database.update(DatabaseHelper.ASSESSMENTS_TABLE, values, selection, selectionArgs);
-    }
+  @Override
+  public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    return database.update(DatabaseHelper.ASSESSMENTS_TABLE, values, selection, selectionArgs);
+  }
 }

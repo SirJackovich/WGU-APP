@@ -1,22 +1,22 @@
 <resources>
-    <string name="app_name">WGU APP</string>
-    <string name="title_activity_assessment">AssessmentActivity</string>
-    <string name="create_new_text">Add</string>
-    <string name="assessment_details_text">Assessment Details</string>
-    <string name="terms_text">Terms</string>
-    <string name="courses_text">Courses</string>
-    <string name="assessments_text">Assessments</string>
-    <string name="mentors_text">Mentors</string>
-    <string name="assessment_details">Assessment Details</string>
-    <string name="type_text">Type</string>
-    <string name="title_text">Title</string>
-    <string name="due_date_text">Due Date</string>
-    <string name="delete_text">Delete</string>
-    <string name="save_text">Save</string>
-    <string name="date_placeholder">00/00/0000</string>
-    <string name="new_assessment">New Assessment</string>
-    <string-array name="assessment_types">
-        <item>Objective</item>
-        <item>Performance</item>
-    </string-array>
+  <string name="app_name">WGU APP</string>
+  <string name="title_activity_assessment">AssessmentActivity</string>
+  <string name="create_new_text">Add</string>
+  <string name="assessment_details_text">Assessment Details</string>
+  <string name="terms_text">Terms</string>
+  <string name="courses_text">Courses</string>
+  <string name="assessments_text">Assessments</string>
+  <string name="mentors_text">Mentors</string>
+  <string name="assessment_details">Assessment Details</string>
+  <string name="type_text">Type</string>
+  <string name="title_text">Title</string>
+  <string name="due_date_text">Due Date</string>
+  <string name="delete_text">Delete</string>
+  <string name="save_text">Save</string>
+  <string name="date_placeholder">00/00/0000</string>
+  <string name="new_assessment">New Assessment</string>
+  <string-array name="assessment_types">
+    <item>Objective</item>
+    <item>Performance</item>
+  </string-array>
 </resources>
