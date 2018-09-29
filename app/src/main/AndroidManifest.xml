@@ -30,6 +30,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AssessmentActivity" />
         </activity>
+        <provider
+            android:authorities="com.example.sirjackovich.assessmentprovider"
+            android:name=".AssessmentsProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>
