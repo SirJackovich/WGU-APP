@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
 import com.example.sirjackovich.wguapp.assessments.AssessmentsActivity;
+import com.example.sirjackovich.wguapp.courses.CoursesActivity;
 import com.example.sirjackovich.wguapp.mentors.MentorsActivity;
 
 public class MainActivity extends ActionBarActivity {
@@ -23,6 +24,10 @@ public class MainActivity extends ActionBarActivity {
 
   public void showMentors(View view) {
     showActivity(MentorsActivity.class);
+  }
+
+  public void showCourses(View view) {
+    showActivity(CoursesActivity.class);
   }
 
   public void showActivity(Class activityClass) {

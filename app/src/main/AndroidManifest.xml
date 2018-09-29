@@ -45,17 +45,39 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-          android:name=".mentors.MentorDetailsActivity"
-          android:label="@string/mentor_details_text"
-          android:parentActivityName=".mentors.MentorsActivity" >
+            android:name=".mentors.MentorDetailsActivity"
+            android:label="@string/mentor_details_text"
+            android:parentActivityName=".mentors.MentorsActivity" >
             <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value=".mentors.MentorsActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mentors.MentorsActivity" />
         </activity>
 
         <provider
-          android:name=".mentors.MentorsProvider"
-          android:authorities="com.example.sirjackovich.mentorsprovider"
+            android:name=".mentors.MentorsProvider"
+            android:authorities="com.example.sirjackovich.mentorsprovider"
+            android:exported="false" />
+
+        <activity
+          android:name=".courses.CoursesActivity"
+          android:label="@string/courses_text"
+          android:parentActivityName=".MainActivity" >
+            <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".MainActivity" />
+        </activity>
+        <activity
+          android:name=".courses.CourseDetailsActivity"
+          android:label="@string/course_details_text"
+          android:parentActivityName=".courses.CoursesActivity" >
+            <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".courses.CoursesActivity" />
+        </activity>
+
+        <provider
+          android:name=".courses.CoursesProvider"
+          android:authorities="com.example.sirjackovich.coursesprovider"
           android:exported="false" />
     </application>
 

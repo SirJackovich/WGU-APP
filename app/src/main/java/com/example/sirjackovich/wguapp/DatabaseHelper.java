@@ -42,6 +42,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       MENTOR_EMAIL + " text, " +
       MENTOR_CREATED + " text default CURRENT_TIMESTAMP)";
 
+  public static final String COURSES_TABLE = "Courses";
+  public static final String COURSE_ID = "_id";
+  public static final String COURSE_TITLE = "title";
+  public static final String COURSE_START_DATE = "startDate";
+  public static final String COURSE_END_DATE = "endDate";
+  public static final String COURSE_STATUS = "status";
+  public static final String COURSE_MENTOR_ID = "mentorID";
+  public static final String COURSE_NOTE = "note";
+//  public static final String COURSE_ASSESSMENT_ID = "assessmentID";
+  public static final String COURSE_CREATED = "created";
+
+  public static final String[] COURSE_COLUMNS = {COURSE_ID, COURSE_TITLE, COURSE_START_DATE, COURSE_END_DATE, COURSE_STATUS, COURSE_MENTOR_ID, COURSE_NOTE, COURSE_CREATED};
+
+  private static final String CREATE_COURSES_TABLE =
+    "create table " + COURSES_TABLE + " ( " +
+      COURSE_ID + " integer primary key autoincrement, " +
+      COURSE_TITLE + " text, " +
+      COURSE_START_DATE + " text, " +
+      COURSE_END_DATE + " text, " +
+      COURSE_STATUS + " text, " +
+      COURSE_MENTOR_ID + " integer, " +
+      COURSE_NOTE + " text, " +
+      COURSE_CREATED + " text default CURRENT_TIMESTAMP, " +
+      "FOREIGN KEY(" + COURSE_MENTOR_ID + ") REFERENCES Mentors(_id))";
+
   public DatabaseHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
@@ -50,12 +75,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase database) {
     database.execSQL(CREATE_ASSESSMENTS_TABLE);
     database.execSQL(CREATE_MENTORS_TABLE);
+    database.execSQL(CREATE_COURSES_TABLE);
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
     database.execSQL("drop table if exists " + ASSESSMENTS_TABLE);
     database.execSQL("drop table if exists " + MENTORS_TABLE);
+    database.execSQL("drop table if exists " + COURSES_TABLE);
     onCreate(database);
   }
 }
