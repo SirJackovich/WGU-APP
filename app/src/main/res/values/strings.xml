@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WGU APP</string>
+    <string name="title_activity_assessment">AssessmentActivity</string>
+    <string name="assessments_text">Assessments</string>
+    <string name="create_new_text">Add</string>
+    <string name="assessment_details_text">Assessment Details</string>
+</resources>
