@@ -31,12 +31,7 @@
                 android:value=".assessments.AssessmentsActivity" />
         </activity>
 
-        <provider
-            android:name=".assessments.AssessmentsProvider"
-            android:authorities="com.example.sirjackovich.assessmentsprovider"
-            android:exported="false" />
-
-        <activity
+      <activity
             android:name=".mentors.MentorsActivity"
             android:label="@string/mentors_text"
             android:parentActivityName=".MainActivity" >
@@ -52,11 +47,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mentors.MentorsActivity" />
         </activity>
-
-        <provider
-            android:name=".mentors.MentorsProvider"
-            android:authorities="com.example.sirjackovich.mentorsprovider"
-            android:exported="false" />
 
         <activity
           android:name=".courses.CoursesActivity"
@@ -76,8 +66,8 @@
         </activity>
 
         <provider
-          android:name=".courses.CoursesProvider"
-          android:authorities="com.example.sirjackovich.coursesprovider"
+          android:name=".ItemProvider"
+          android:authorities="com.example.sirjackovich.itemprovider"
           android:exported="false" />
     </application>
 

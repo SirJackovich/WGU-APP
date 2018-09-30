@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.sirjackovich.wguapp.DatabaseHelper;
+import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
 public class AssessmentDetailsActivity extends AppCompatActivity {
@@ -41,7 +42,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
 
     Intent intent = getIntent();
 
-    Uri uri = intent.getParcelableExtra(AssessmentsProvider.CONTENT_ITEM_TYPE);
+    Uri uri = intent.getParcelableExtra("Assessment");
 
     if (uri == null) {
       action = Intent.ACTION_INSERT;
@@ -50,10 +51,13 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
       action = Intent.ACTION_EDIT;
       assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + uri.getLastPathSegment();
       Cursor cursor = getContentResolver().query(uri, DatabaseHelper.ASSESSMENT_COLUMNS, assessmentFilter, null, null);
-      cursor.moveToFirst();
-      title.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_TITLE)));
-      spinner.setSelection(adapter.getPosition(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_TYPE))));
-      dueDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_DUE_DATE)));
+      if (cursor != null) {
+        cursor.moveToFirst();
+        title.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_TITLE)));
+        spinner.setSelection(adapter.getPosition(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_TYPE))));
+        dueDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_DUE_DATE)));
+        cursor.close();
+      }
     }
   }
 
@@ -62,7 +66,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
   }
 
   private void deleteAssessment() {
-    getContentResolver().delete(AssessmentsProvider.CONTENT_URI, assessmentFilter, null);
+    getContentResolver().delete(ItemProvider.ASSESSMENTS_CONTENT_URI, assessmentFilter, null);
     setResult(RESULT_OK);
     finish();
   }
@@ -83,7 +87,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
     values.put(DatabaseHelper.ASSESSMENT_TITLE, title.getText().toString().trim());
     values.put(DatabaseHelper.ASSESSMENT_TYPE, spinner.getSelectedItem().toString().trim());
     values.put(DatabaseHelper.ASSESSMENT_DUE_DATE, dueDate.getText().toString().trim());
-    getContentResolver().update(AssessmentsProvider.CONTENT_URI, values, assessmentFilter, null);
+    getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
     setResult(RESULT_OK);
   }
 
@@ -92,7 +96,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
     values.put(DatabaseHelper.ASSESSMENT_TITLE, title.getText().toString().trim());
     values.put(DatabaseHelper.ASSESSMENT_TYPE, spinner.getSelectedItem().toString().trim());
     values.put(DatabaseHelper.ASSESSMENT_DUE_DATE, dueDate.getText().toString().trim());
-    getContentResolver().insert(AssessmentsProvider.CONTENT_URI, values);
+    getContentResolver().insert(ItemProvider.ASSESSMENTS_CONTENT_URI, values);
     setResult(RESULT_OK);
   }
 }

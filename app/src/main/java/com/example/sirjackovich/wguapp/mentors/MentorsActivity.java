@@ -7,7 +7,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
@@ -15,10 +15,11 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.example.sirjackovich.wguapp.DatabaseHelper;
+import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
 
-public class MentorsActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MentorsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
   private CursorAdapter cursorAdapter;
 
   @Override
@@ -39,8 +40,8 @@ public class MentorsActivity extends ActionBarActivity implements LoaderManager.
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(MentorsActivity.this, MentorDetailsActivity.class);
-        Uri uri = Uri.parse(MentorsProvider.CONTENT_URI + "/" + id);
-        intent.putExtra(MentorsProvider.CONTENT_ITEM_TYPE, uri);
+        Uri uri = Uri.parse(ItemProvider.MENTOR_CONTENT_URI + "/" + id);
+        intent.putExtra("Mentor", uri);
         startActivityForResult(intent, 1);
       }
     });
@@ -54,8 +55,7 @@ public class MentorsActivity extends ActionBarActivity implements LoaderManager.
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    return new CursorLoader(this, MentorsProvider.CONTENT_URI,
-      null, null, null, null);
+    return new CursorLoader(this, ItemProvider.MENTOR_CONTENT_URI, null, null, null, null);
   }
 
   @Override

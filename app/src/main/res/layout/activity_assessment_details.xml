@@ -1,94 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:orientation="vertical"
   android:paddingBottom="@dimen/activity_vertical_margin"
   android:paddingLeft="@dimen/activity_horizontal_margin"
   android:paddingRight="@dimen/activity_horizontal_margin"
   android:paddingTop="@dimen/activity_vertical_margin"
   tools:context="com.example.sirjackovich.wguapp.assessments.AssessmentDetailsActivity">
 
-
-  <GridLayout
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:columnCount="2"
-    android:rowCount="4">
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
-    <TextView
-      android:id="@+id/type_text_view"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginLeft="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
-      android:text="@string/type_text" />
+    <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
 
-    <Spinner
-      android:id="@+id/type_spinner"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginLeft="8dp"
-      android:layout_marginRight="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp" />
+      <TextView
+        android:id="@+id/type_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/type_text" />
+    </RelativeLayout>
 
-    <TextView
-      android:id="@+id/title_text_view"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginLeft="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
-      android:text="@string/title_text" />
+    <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
 
-    <EditText
-      android:id="@+id/title_edit_text"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
+      <Spinner
+        android:id="@+id/type_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    </RelativeLayout>
+  </LinearLayout>
 
-    <TextView
-      android:id="@+id/due_date_text_view"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginLeft="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
-      android:text="@string/due_date_text" />
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
-    <EditText
-      android:id="@+id/due_date_edit_text"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:hint="@string/date_placeholder"
-      android:inputType="date"
-      android:text="@string/date_placeholder" />
+    <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
 
-    <Button
-      android:id="@+id/delete_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginLeft="8dp"
-      android:layout_marginStart="8dp"
-      android:onClick="handleDelete"
-      android:text="@string/delete_text" />
+      <TextView
+        android:id="@+id/title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_text" />
+    </RelativeLayout>
 
-    <Button
-      android:id="@+id/save_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginRight="8dp"
-      android:onClick="handleSave"
-      android:text="@string/save_text" />
-  </GridLayout>
+    <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
 
-</RelativeLayout>
+      <EditText
+        android:id="@+id/title_edit_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text" />
+    </RelativeLayout>
+  </LinearLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
+
+      <TextView
+        android:id="@+id/due_date_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/due_date_text" />
+    </RelativeLayout>
+
+    <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
+
+      <EditText
+        android:id="@+id/due_date_edit_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/date_placeholder"
+        android:inputType="date" />
+    </RelativeLayout>
+  </LinearLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
+
+      <Button
+        android:id="@+id/delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="handleDelete"
+        android:text="@string/delete_text" />
+    </RelativeLayout>
+
+    <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
+
+      <Button
+        android:id="@+id/save_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="handleSave"
+        android:text="@string/save_text" />
+    </RelativeLayout>
+  </LinearLayout>
+</LinearLayout>

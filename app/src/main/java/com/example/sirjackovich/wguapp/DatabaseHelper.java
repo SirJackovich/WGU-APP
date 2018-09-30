@@ -50,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public static final String COURSE_STATUS = "status";
   public static final String COURSE_MENTOR_ID = "mentorID";
   public static final String COURSE_NOTE = "note";
-//  public static final String COURSE_ASSESSMENT_ID = "assessmentID";
+  //  public static final String COURSE_ASSESSMENT_ID = "assessmentID";
   public static final String COURSE_CREATED = "created";
 
   public static final String[] COURSE_COLUMNS = {COURSE_ID, COURSE_TITLE, COURSE_START_DATE, COURSE_END_DATE, COURSE_STATUS, COURSE_MENTOR_ID, COURSE_NOTE, COURSE_CREATED};

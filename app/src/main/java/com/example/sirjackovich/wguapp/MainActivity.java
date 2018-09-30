@@ -2,14 +2,14 @@ package com.example.sirjackovich.wguapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.sirjackovich.wguapp.assessments.AssessmentsActivity;
 import com.example.sirjackovich.wguapp.courses.CoursesActivity;
 import com.example.sirjackovich.wguapp.mentors.MentorsActivity;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

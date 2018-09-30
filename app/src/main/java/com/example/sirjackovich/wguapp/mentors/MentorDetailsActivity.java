@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.sirjackovich.wguapp.DatabaseHelper;
+import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
 public class MentorDetailsActivity extends AppCompatActivity {
@@ -31,7 +32,7 @@ public class MentorDetailsActivity extends AppCompatActivity {
 
     Intent intent = getIntent();
 
-    Uri uri = intent.getParcelableExtra(MentorsProvider.CONTENT_ITEM_TYPE);
+    Uri uri = intent.getParcelableExtra("Mentor");
 
     if (uri == null) {
       action = Intent.ACTION_INSERT;
@@ -40,10 +41,13 @@ public class MentorDetailsActivity extends AppCompatActivity {
       action = Intent.ACTION_EDIT;
       mentorFilter = DatabaseHelper.MENTOR_ID + "=" + uri.getLastPathSegment();
       Cursor cursor = getContentResolver().query(uri, DatabaseHelper.MENTOR_COLUMNS, mentorFilter, null, null);
-      cursor.moveToFirst();
-      name.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_NAME)));
-      phone.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_PHONE)));
-      email.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_EMAIL)));
+      if (cursor != null) {
+        cursor.moveToFirst();
+        name.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_NAME)));
+        phone.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_PHONE)));
+        email.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_EMAIL)));
+        cursor.close();
+      }
     }
   }
 
@@ -52,7 +56,7 @@ public class MentorDetailsActivity extends AppCompatActivity {
   }
 
   private void deleteMentor() {
-    getContentResolver().delete(MentorsProvider.CONTENT_URI, mentorFilter, null);
+    getContentResolver().delete(ItemProvider.MENTOR_CONTENT_URI, mentorFilter, null);
     setResult(RESULT_OK);
     finish();
   }
@@ -73,7 +77,7 @@ public class MentorDetailsActivity extends AppCompatActivity {
     values.put(DatabaseHelper.MENTOR_NAME, name.getText().toString().trim());
     values.put(DatabaseHelper.MENTOR_PHONE, phone.getText().toString().trim());
     values.put(DatabaseHelper.MENTOR_EMAIL, email.getText().toString().trim());
-    getContentResolver().update(MentorsProvider.CONTENT_URI, values, mentorFilter, null);
+    getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
     setResult(RESULT_OK);
   }
 
@@ -82,7 +86,7 @@ public class MentorDetailsActivity extends AppCompatActivity {
     values.put(DatabaseHelper.MENTOR_NAME, name.getText().toString().trim());
     values.put(DatabaseHelper.MENTOR_PHONE, phone.getText().toString().trim());
     values.put(DatabaseHelper.MENTOR_EMAIL, email.getText().toString().trim());
-    getContentResolver().insert(MentorsProvider.CONTENT_URI, values);
+    getContentResolver().insert(ItemProvider.MENTOR_CONTENT_URI, values);
     setResult(RESULT_OK);
   }
 }

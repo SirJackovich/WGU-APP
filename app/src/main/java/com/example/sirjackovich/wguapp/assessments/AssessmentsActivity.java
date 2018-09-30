@@ -1,15 +1,13 @@
 package com.example.sirjackovich.wguapp.assessments;
 
 import android.app.LoaderManager;
-import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
@@ -17,10 +15,11 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.example.sirjackovich.wguapp.DatabaseHelper;
+import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
 
-public class AssessmentsActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class AssessmentsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
   private CursorAdapter cursorAdapter;
 
   @Override
@@ -41,8 +40,8 @@ public class AssessmentsActivity extends ActionBarActivity implements LoaderMana
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(AssessmentsActivity.this, AssessmentDetailsActivity.class);
-        Uri uri = Uri.parse(AssessmentsProvider.CONTENT_URI + "/" + id);
-        intent.putExtra(AssessmentsProvider.CONTENT_ITEM_TYPE, uri);
+        Uri uri = Uri.parse(ItemProvider.ASSESSMENTS_CONTENT_URI + "/" + id);
+        intent.putExtra("Assessment", uri);
         startActivityForResult(intent, 1);
       }
     });
@@ -57,7 +56,7 @@ public class AssessmentsActivity extends ActionBarActivity implements LoaderMana
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    return new CursorLoader(this, AssessmentsProvider.CONTENT_URI,
+    return new CursorLoader(this, ItemProvider.ASSESSMENTS_CONTENT_URI,
       null, null, null, null);
   }
 
