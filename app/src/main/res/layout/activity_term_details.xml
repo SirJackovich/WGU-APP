@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:focusableInTouchMode="true"
+android:orientation="vertical"
+android:paddingBottom="@dimen/activity_vertical_margin"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+tools:context="com.example.sirjackovich.wguapp.terms.TermDetailsActivity">
+
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:baselineAligned="false"
+  android:orientation="horizontal">
+
+  <RelativeLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <TextView
+      android:id="@+id/title_text_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/title_text" />
+  </RelativeLayout>
+
+  <RelativeLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <EditText
+      android:id="@+id/title_edit_text"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:inputType="text" />
+  </RelativeLayout>
+</LinearLayout>
+
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:baselineAligned="false"
+  android:orientation="horizontal">
+
+  <RelativeLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <TextView
+      android:id="@+id/start_date_text_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/start_date_text" />
+  </RelativeLayout>
+
+  <RelativeLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <EditText
+      android:id="@+id/start_date_edit_text"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:inputType="date" />
+  </RelativeLayout>
+</LinearLayout>
+
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:baselineAligned="false"
+  android:orientation="horizontal">
+
+  <RelativeLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <TextView
+      android:id="@+id/end_date_text_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/end_date_text" />
+  </RelativeLayout>
+
+  <RelativeLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <EditText
+      android:id="@+id/end_date_edit_text"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:inputType="date" />
+  </RelativeLayout>
+</LinearLayout>
+
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:baselineAligned="false"
+  android:orientation="horizontal">
+  <TextView
+    android:id="@+id/courses_text_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/courses_text" />
+
+</LinearLayout>
+
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="60dp"
+  android:baselineAligned="false"
+  android:orientation="horizontal">
+
+  <ListView
+    android:id="@+id/course_list_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+
+</LinearLayout>
+
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:baselineAligned="false"
+  android:orientation="horizontal">
+
+  <RelativeLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <Button
+      android:id="@+id/delete_button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:onClick="handleDelete"
+      android:text="@string/delete_text" />
+  </RelativeLayout>
+
+  <RelativeLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <Button
+      android:id="@+id/save_button"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:onClick="handleSave"
+      android:text="@string/save_text" />
+  </RelativeLayout>
+</LinearLayout>
+</LinearLayout>

@@ -15,10 +15,12 @@ public class ItemProvider extends ContentProvider {
   private static final String MENTORS_BASE_PATH = "Mentors";
   private static final String COURSES_BASE_PATH = "Courses";
   private static final String ASSESSMENTS_BASE_PATH = "Assessments";
+  private static final String TERMS_BASE_PATH = "Terms";
 
   public static final Uri MENTOR_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + MENTORS_BASE_PATH);
   public static final Uri COURSES_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + COURSES_BASE_PATH);
   public static final Uri ASSESSMENTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + ASSESSMENTS_BASE_PATH);
+  public static final Uri TERMS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TERMS_BASE_PATH);
 
   private static final int MENTORS = 1;
   private static final int MENTOR_ID = 2;
@@ -26,6 +28,8 @@ public class ItemProvider extends ContentProvider {
   private static final int COURSE_ID = 4;
   private static final int ASSESSMENTS = 5;
   private static final int ASSESSMENT_ID = 6;
+  private static final int TERMS = 7;
+  private static final int TERM_ID = 8;
 
   private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -36,6 +40,8 @@ public class ItemProvider extends ContentProvider {
     uriMatcher.addURI(AUTHORITY, COURSES_BASE_PATH + "/#", COURSE_ID);
     uriMatcher.addURI(AUTHORITY, ASSESSMENTS_BASE_PATH, ASSESSMENTS);
     uriMatcher.addURI(AUTHORITY, ASSESSMENTS_BASE_PATH + "/#", ASSESSMENT_ID);
+    uriMatcher.addURI(AUTHORITY, TERMS_BASE_PATH, TERMS);
+    uriMatcher.addURI(AUTHORITY, TERMS_BASE_PATH + "/#", TERM_ID);
   }
 
   private SQLiteDatabase database;
@@ -73,6 +79,13 @@ public class ItemProvider extends ContentProvider {
         selection = DatabaseHelper.ASSESSMENT_ID + "=" + uri.getLastPathSegment();
         cursor = database.query(DatabaseHelper.ASSESSMENTS_TABLE, DatabaseHelper.ASSESSMENT_COLUMNS, selection, null, null, null, DatabaseHelper.ASSESSMENT_CREATED + " DESC");
         break;
+      case TERMS:
+        cursor = database.query(DatabaseHelper.TERMS_TABLE, DatabaseHelper.TERM_COLUMNS, selection, null, null, null, DatabaseHelper.TERM_CREATED + " DESC");
+        break;
+      case TERM_ID:
+        selection = DatabaseHelper.TERM_ID + "=" + uri.getLastPathSegment();
+        cursor = database.query(DatabaseHelper.TERMS_TABLE, DatabaseHelper.TERM_COLUMNS, selection, null, null, null, DatabaseHelper.TERM_CREATED + " DESC");
+        break;
     }
     return cursor;
   }
@@ -94,6 +107,9 @@ public class ItemProvider extends ContentProvider {
         break;
       case ASSESSMENTS:
         newUri = Uri.parse(ASSESSMENTS_BASE_PATH + "/" + database.insert(DatabaseHelper.ASSESSMENTS_TABLE, null, values));
+        break;
+      case TERMS:
+        newUri = Uri.parse(TERMS_BASE_PATH + "/" + database.insert(DatabaseHelper.TERMS_TABLE, null, values));
         break;
     }
     return newUri;
@@ -124,6 +140,13 @@ public class ItemProvider extends ContentProvider {
         selection = DatabaseHelper.ASSESSMENT_ID + "=" + uri.getLastPathSegment();
         result = database.delete(DatabaseHelper.ASSESSMENTS_TABLE, selection, selectionArgs);
         break;
+      case TERMS:
+        result = database.delete(DatabaseHelper.TERMS_TABLE, selection, selectionArgs);
+        break;
+      case TERM_ID:
+        selection = DatabaseHelper.TERM_ID + "=" + uri.getLastPathSegment();
+        result = database.delete(DatabaseHelper.TERMS_TABLE, selection, selectionArgs);
+        break;
     }
     return result;
   }
@@ -152,6 +175,13 @@ public class ItemProvider extends ContentProvider {
       case ASSESSMENT_ID:
         selection = DatabaseHelper.ASSESSMENT_ID + "=" + uri.getLastPathSegment();
         result = database.update(DatabaseHelper.ASSESSMENTS_TABLE, values, selection, selectionArgs);
+        break;
+      case TERMS:
+        result = database.update(DatabaseHelper.TERMS_TABLE, values, selection, selectionArgs);
+        break;
+      case TERM_ID:
+        selection = DatabaseHelper.TERM_ID + "=" + uri.getLastPathSegment();
+        result = database.update(DatabaseHelper.TERMS_TABLE, values, selection, selectionArgs);
         break;
     }
     return result;

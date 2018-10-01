@@ -57,5 +57,18 @@
       android:layout_marginTop="8dp"
       android:onClick="showCourses"
       android:text="@string/courses_text" />
+
+    <Button
+      android:id="@+id/terms_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:layout_marginEnd="8dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:onClick="showTerms"
+      android:text="@string/terms_text" />
   </LinearLayout>
 </RelativeLayout>

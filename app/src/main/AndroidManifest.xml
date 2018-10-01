@@ -30,8 +30,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".assessments.AssessmentsActivity" />
         </activity>
-
-      <activity
+        <activity
             android:name=".mentors.MentorsActivity"
             android:label="@string/mentors_text"
             android:parentActivityName=".MainActivity" >
@@ -47,28 +46,44 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mentors.MentorsActivity" />
         </activity>
+        <activity
+            android:name=".courses.CoursesActivity"
+            android:label="@string/courses_text"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".courses.CourseDetailsActivity"
+            android:label="@string/course_details_text"
+            android:parentActivityName=".courses.CoursesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".courses.CoursesActivity" />
+        </activity>
 
         <activity
-          android:name=".courses.CoursesActivity"
-          android:label="@string/courses_text"
+          android:name=".terms.TermsActivity"
+          android:label="@string/terms_text"
           android:parentActivityName=".MainActivity" >
             <meta-data
               android:name="android.support.PARENT_ACTIVITY"
               android:value=".MainActivity" />
         </activity>
         <activity
-          android:name=".courses.CourseDetailsActivity"
-          android:label="@string/course_details_text"
-          android:parentActivityName=".courses.CoursesActivity" >
+          android:name=".terms.TermDetailsActivity"
+          android:label="@string/term_details_text"
+          android:parentActivityName=".terms.TermsActivity" >
             <meta-data
               android:name="android.support.PARENT_ACTIVITY"
-              android:value=".courses.CoursesActivity" />
+              android:value=".terms.TermsActivity" />
         </activity>
 
         <provider
-          android:name=".ItemProvider"
-          android:authorities="com.example.sirjackovich.itemprovider"
-          android:exported="false" />
+            android:name=".ItemProvider"
+            android:authorities="com.example.sirjackovich.itemprovider"
+            android:exported="false" />
     </application>
 
 </manifest>

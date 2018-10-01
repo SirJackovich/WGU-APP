@@ -12,10 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import com.example.sirjackovich.wguapp.CheckBoxAdapter;
 import com.example.sirjackovich.wguapp.DatabaseHelper;
@@ -33,8 +31,8 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   private EditText note;
   private String action;
   private String courseFilter;
-  private CursorAdapter mentorCursorAdapter;
-  private SimpleCursorAdapter assessmentCursorAdapter;
+  private CheckBoxAdapter mentorAdapter;
+  private CheckBoxAdapter assessmentAdapter;
   private String courseID;
   private List<Long> mentors;
   private List<Long> assessments;
@@ -69,6 +67,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
       action = Intent.ACTION_INSERT;
       setTitle(getString(R.string.new_course_text));
       mentors = new ArrayList<>();
+      assessments = new ArrayList<>();
     } else {
       action = Intent.ACTION_EDIT;
       courseID = uri.getLastPathSegment();
@@ -91,13 +90,13 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
     String[] mentorFrom = {DatabaseHelper.MENTOR_NAME};
     int[] mentorTo = {android.R.id.text1};
 
-    mentorCursorAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, mentorFrom, mentorTo, mentorFlag, courseID);
+    mentorAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, mentorFrom, mentorTo, mentorFlag, courseID);
 
     ListView mentorListView = (ListView) findViewById(R.id.mentor_list_view);
 
     mentorListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-    mentorListView.setAdapter(mentorCursorAdapter);
+    mentorListView.setAdapter(mentorAdapter);
 
     mentorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
@@ -127,13 +126,13 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
     String[] assessmentFrom = {DatabaseHelper.ASSESSMENT_TITLE};
     int[] assessmentTo = {android.R.id.text1};
 
-    assessmentCursorAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, assessmentFrom, assessmentTo, assessmentFlag, courseID);
+    assessmentAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, assessmentFrom, assessmentTo, assessmentFlag, courseID);
 
     ListView assessmentListView = (ListView) findViewById(R.id.assessment_list_view);
 
     assessmentListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-    assessmentListView.setAdapter(assessmentCursorAdapter);
+    assessmentListView.setAdapter(assessmentAdapter);
 
     assessmentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
@@ -239,10 +238,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
     int id = loader.getId();
     if(id == assessmentFlag){
-      assessmentCursorAdapter.swapCursor(data);
+      assessmentAdapter.swapCursor(data);
     }
     if(id == mentorFlag){
-      mentorCursorAdapter.swapCursor(data);
+      mentorAdapter.swapCursor(data);
     }
   }
 
@@ -250,10 +249,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   public void onLoaderReset(Loader<Cursor> loader) {
     int id = loader.getId();
     if(id == assessmentFlag){
-      assessmentCursorAdapter.swapCursor(null);
+      assessmentAdapter.swapCursor(null);
     }
     if(id == mentorFlag){
-      mentorCursorAdapter.swapCursor(null);
+      mentorAdapter.swapCursor(null);
     }
   }
 }

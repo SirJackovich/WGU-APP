@@ -8,6 +8,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private static final int DATABASE_VERSION = 1;
   private static final String DATABASE_NAME = "WGUAPP";
 
+  public static final String TERMS_TABLE = "Terms";
+  public static final String TERM_ID = "_id";
+  public static final String TERM_TITLE = "title";
+  public static final String TERM_START_DATE = "startDate";
+  public static final String TERM_END_DATE = "endDate";
+  public static final String TERM_CREATED = "created";
+
+  public static final String[] TERM_COLUMNS = {TERM_ID, TERM_TITLE, TERM_START_DATE, TERM_END_DATE, TERM_CREATED};
+
+  private static final String CREATE_TERMS_TABLE =
+    "create table " + TERMS_TABLE + " ( " +
+      TERM_ID + " integer primary key autoincrement, " +
+      TERM_TITLE + " text, " +
+      TERM_START_DATE + " text, " +
+      TERM_END_DATE + " text, " +
+      TERM_CREATED + " text default CURRENT_TIMESTAMP)";
+
   public static final String COURSES_TABLE = "Courses";
   public static final String COURSE_ID = "_id";
   public static final String COURSE_TITLE = "title";
@@ -15,10 +32,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public static final String COURSE_END_DATE = "endDate";
   public static final String COURSE_STATUS = "status";
   public static final String COURSE_NOTE = "note";
-  //  public static final String COURSE_TERM_ID = "termID";
+    public static final String COURSE_TERM_ID = "termID";
   public static final String COURSE_CREATED = "created";
 
-  public static final String[] COURSE_COLUMNS = {COURSE_ID, COURSE_TITLE, COURSE_START_DATE, COURSE_END_DATE, COURSE_STATUS, COURSE_NOTE, COURSE_CREATED};
+  public static final String[] COURSE_COLUMNS = {COURSE_ID, COURSE_TITLE, COURSE_START_DATE, COURSE_END_DATE, COURSE_STATUS, COURSE_NOTE, COURSE_TERM_ID, COURSE_CREATED};
 
   private static final String CREATE_COURSES_TABLE =
     "create table " + COURSES_TABLE + " ( " +
@@ -28,7 +45,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       COURSE_END_DATE + " text, " +
       COURSE_STATUS + " text, " +
       COURSE_NOTE + " text, " +
-      COURSE_CREATED + " text default CURRENT_TIMESTAMP)";
+      COURSE_TERM_ID + " integer, " +
+      COURSE_CREATED + " text default CURRENT_TIMESTAMP, " +
+      "FOREIGN KEY(" + COURSE_TERM_ID + ") REFERENCES " + TERMS_TABLE + "(" + TERM_ID + " ))";
 
   public static final String ASSESSMENTS_TABLE = "Assessments";
   public static final String ASSESSMENT_ID = "_id";
@@ -70,8 +89,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       MENTOR_CREATED + " text default CURRENT_TIMESTAMP, " +
       "FOREIGN KEY(" + MENTOR_COURSE_ID + ") REFERENCES " + COURSES_TABLE + "(" + COURSE_ID + " ))";
 
-
-
   public DatabaseHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
@@ -81,6 +98,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     database.execSQL(CREATE_ASSESSMENTS_TABLE);
     database.execSQL(CREATE_MENTORS_TABLE);
     database.execSQL(CREATE_COURSES_TABLE);
+    database.execSQL(CREATE_TERMS_TABLE);
   }
 
   @Override
@@ -88,6 +106,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     database.execSQL("drop table if exists " + ASSESSMENTS_TABLE);
     database.execSQL("drop table if exists " + MENTORS_TABLE);
     database.execSQL("drop table if exists " + COURSES_TABLE);
+    database.execSQL("drop table if exists " + TERMS_TABLE);
     onCreate(database);
   }
 }
