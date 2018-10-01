@@ -7,18 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 public class CheckBoxAdapter extends SimpleCursorAdapter {
   private String courseID;
-  private Context context;
   private int layout;
+  private int mentorFlag = 1;
+  private int assessmentFlag = 2;
+  private int flag;
 
   public CheckBoxAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags, String courseID) {
     super(context, layout, c, from, to, flags);
     this.courseID = courseID;
     this.layout = layout;
-    this.context = context;
+    this.flag = flags;
   }
 
   @Override
@@ -30,12 +31,24 @@ public class CheckBoxAdapter extends SimpleCursorAdapter {
   public void bindView(View view, Context context, Cursor cursor) {
     CheckedTextView checkbox = (CheckedTextView)view;
     if(this.courseID != null){
-      String courseID = cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_COURSE_ID));
+      String courseID = null;
+      if(flag == mentorFlag){
+        courseID = cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_COURSE_ID));
+      }
+      if(flag == assessmentFlag){
+        courseID = cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_COURSE_ID));
+      }
       if (this.courseID.equals(courseID)) {
         checkbox.setChecked(true);
       }
     }
-    String mentorName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_NAME));
-    checkbox.setText(mentorName);
+    String name = null;
+    if(flag == mentorFlag){
+      name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.MENTOR_NAME));
+    }
+    if(flag == assessmentFlag){
+      name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_TITLE));
+    }
+    checkbox.setText(name);
   }
 }

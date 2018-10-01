@@ -15,6 +15,7 @@ import android.widget.CheckedTextView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import com.example.sirjackovich.wguapp.CheckBoxAdapter;
 import com.example.sirjackovich.wguapp.DatabaseHelper;
@@ -32,15 +33,28 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   private EditText note;
   private String action;
   private String courseFilter;
-  private CursorAdapter cursorAdapter;
+  private CursorAdapter mentorCursorAdapter;
+  private SimpleCursorAdapter assessmentCursorAdapter;
   private String courseID;
   private List<Long> mentors;
+  private List<Long> assessments;
+  private int mentorFlag = 1;
+  private int assessmentFlag = 2;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_course_details);
 
+    initializeFields();
+
+    initializeMentorList();
+
+    initializeAssessmentList();
+
+  }
+
+  private void initializeFields() {
     title = (EditText) findViewById(R.id.title_edit_text);
     startDate = (EditText) findViewById(R.id.start_date_edit_text);
     endDate = (EditText) findViewById(R.id.end_date_edit_text);
@@ -71,23 +85,24 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
       }
 
     }
+  }
 
+  private void initializeMentorList() {
+    String[] mentorFrom = {DatabaseHelper.MENTOR_NAME};
+    int[] mentorTo = {android.R.id.text1};
 
-    String[] from = {DatabaseHelper.MENTOR_NAME};
-    int[] to = {android.R.id.text1};
+    mentorCursorAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, mentorFrom, mentorTo, mentorFlag, courseID);
 
-    cursorAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, 0, courseID);
+    ListView mentorListView = (ListView) findViewById(R.id.mentor_list_view);
 
-    ListView listView = (ListView) findViewById(R.id.listView);
+    mentorListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-    listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+    mentorListView.setAdapter(mentorCursorAdapter);
 
-    listView.setAdapter(cursorAdapter);
-
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    mentorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(courseID != null){
+        if (courseID != null) {
           CheckedTextView checkbox = (CheckedTextView) view;
           ContentValues values = new ContentValues();
           String mentorFilter = DatabaseHelper.MENTOR_ID + "=" + id;
@@ -98,13 +113,49 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
             values.put(DatabaseHelper.MENTOR_COURSE_ID, "");
             getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
           }
-        }else{
+        } else {
           mentors.add(id);
         }
       }
     });
 
-    getLoaderManager().initLoader(0, null, this);
+    getLoaderManager().initLoader(mentorFlag, null, this);
+  }
+
+  private void initializeAssessmentList() {
+    // TODO: combine this and initializeMentor list into one function
+    String[] assessmentFrom = {DatabaseHelper.ASSESSMENT_TITLE};
+    int[] assessmentTo = {android.R.id.text1};
+
+    assessmentCursorAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, assessmentFrom, assessmentTo, assessmentFlag, courseID);
+
+    ListView assessmentListView = (ListView) findViewById(R.id.assessment_list_view);
+
+    assessmentListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+    assessmentListView.setAdapter(assessmentCursorAdapter);
+
+    assessmentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(courseID != null){
+          CheckedTextView checkbox = (CheckedTextView) view;
+          ContentValues values = new ContentValues();
+          String assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + id;
+          if (checkbox.isChecked()) {
+            values.put(DatabaseHelper.ASSESSMENT_COURSE_ID, courseID);
+            getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
+          } else {
+            values.put(DatabaseHelper.ASSESSMENT_COURSE_ID, "");
+            getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
+          }
+        }else{
+          assessments.add(id);
+        }
+      }
+    });
+
+    getLoaderManager().initLoader(assessmentFlag, null, this);
   }
 
   public void handleDelete(View view) {
@@ -133,6 +184,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
       case Intent.ACTION_INSERT:
         courseID = insertCourse(values);
         updateMentors();
+        updateAssessments();
         break;
       case Intent.ACTION_EDIT:
         updateCourse(values);
@@ -162,18 +214,46 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
     }
   }
 
+  private void updateAssessments() {
+    // TODO: combine this with updateMentors
+    for (int i = 0; i < assessments.size(); i++) {
+      ContentValues values = new ContentValues();
+      String assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + assessments.get(i);
+      values.put(DatabaseHelper.ASSESSMENT_COURSE_ID, courseID);
+      getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
+    }
+  }
+
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    return new CursorLoader(this, ItemProvider.MENTOR_CONTENT_URI, null, null, null, null);
+    if(id == assessmentFlag){
+      return new CursorLoader(this, ItemProvider.ASSESSMENTS_CONTENT_URI, null, null, null, null);
+    }
+    if(id == mentorFlag){
+      return new CursorLoader(this, ItemProvider.MENTOR_CONTENT_URI, null, null, null, null);
+    }
+    return null;
   }
 
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-    cursorAdapter.swapCursor(data);
+    int id = loader.getId();
+    if(id == assessmentFlag){
+      assessmentCursorAdapter.swapCursor(data);
+    }
+    if(id == mentorFlag){
+      mentorCursorAdapter.swapCursor(data);
+    }
   }
 
   @Override
   public void onLoaderReset(Loader<Cursor> loader) {
-    cursorAdapter.swapCursor(null);
+    int id = loader.getId();
+    if(id == assessmentFlag){
+      assessmentCursorAdapter.swapCursor(null);
+    }
+    if(id == mentorFlag){
+      mentorCursorAdapter.swapCursor(null);
+    }
   }
 }
