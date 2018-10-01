@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.sirjackovich.wguapp.CheckBoxAdapter;
 import com.example.sirjackovich.wguapp.DatabaseHelper;
@@ -32,7 +33,6 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
   private CheckBoxAdapter courseAdapter;
   private String termID;
   private List<Long> courses;
-  private int courseFlag = 3;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
     String[] from = {DatabaseHelper.COURSE_TITLE};
     int[] to = {android.R.id.text1};
 
-    courseAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, courseFlag, termID);
+    courseAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, 3, termID);
 
     ListView listView = (ListView) findViewById(R.id.course_list_view);
 
@@ -118,9 +118,19 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
   }
 
   private void deleteTerm() {
-    getContentResolver().delete(ItemProvider.TERMS_CONTENT_URI, termFilter, null);
-    setResult(RESULT_OK);
-    finish();
+    String[] courseTermIDs = {DatabaseHelper.COURSE_TERM_ID};
+    String filter = DatabaseHelper.COURSE_TERM_ID + "=" + termID;
+    Cursor cursor = getContentResolver().query(ItemProvider.COURSES_CONTENT_URI, courseTermIDs, filter, null, null);
+    if (cursor != null) {
+      if (cursor.moveToFirst()){
+        Toast.makeText(TermDetailsActivity.this, "Term not deleted, remove courses from term before trying to delete it.", Toast.LENGTH_SHORT).show();
+        cursor.close();
+      }else{
+        getContentResolver().delete(ItemProvider.TERMS_CONTENT_URI, termFilter, null);
+        setResult(RESULT_OK);
+        finish();
+      }
+    }
   }
 
   public void handleSave(View view) {

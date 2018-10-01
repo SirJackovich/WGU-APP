@@ -11,9 +11,6 @@ import android.widget.SimpleCursorAdapter;
 public class CheckBoxAdapter extends SimpleCursorAdapter {
   private String itemID;
   private int layout;
-  private int mentorFlag = 1;
-  private int assessmentFlag = 2;
-  private int courseFlag = 3;
   private int flag;
 
   public CheckBoxAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags, String itemID) {
@@ -31,6 +28,9 @@ public class CheckBoxAdapter extends SimpleCursorAdapter {
   @Override
   public void bindView(View view, Context context, Cursor cursor) {
     CheckedTextView checkbox = (CheckedTextView)view;
+    int mentorFlag = 1;
+    int assessmentFlag = 2;
+    int courseFlag = 3;
     if(this.itemID != null){
       String itemID = null;
       if(flag == mentorFlag){
