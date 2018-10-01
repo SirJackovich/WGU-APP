@@ -52,7 +52,12 @@ public class MentorDetailsActivity extends AppCompatActivity {
   }
 
   public void handleDelete(View view) {
-    deleteMentor();
+    switch (action) {
+      case Intent.ACTION_INSERT:
+        onBackPressed();
+      case Intent.ACTION_EDIT:
+        deleteMentor();
+    }
   }
 
   private void deleteMentor() {
@@ -62,30 +67,26 @@ public class MentorDetailsActivity extends AppCompatActivity {
   }
 
   public void handleSave(View view) {
+    ContentValues values = new ContentValues();
+    values.put(DatabaseHelper.MENTOR_NAME, name.getText().toString().trim());
+    values.put(DatabaseHelper.MENTOR_PHONE, phone.getText().toString().trim());
+    values.put(DatabaseHelper.MENTOR_EMAIL, email.getText().toString().trim());
     switch (action) {
       case Intent.ACTION_INSERT:
-        insertMentor();
+        insertMentor(values);
         break;
       case Intent.ACTION_EDIT:
-        updateMentor();
+        updateMentor(values);
     }
     finish();
   }
 
-  private void updateMentor() {
-    ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.MENTOR_NAME, name.getText().toString().trim());
-    values.put(DatabaseHelper.MENTOR_PHONE, phone.getText().toString().trim());
-    values.put(DatabaseHelper.MENTOR_EMAIL, email.getText().toString().trim());
+  private void updateMentor(ContentValues values) {
     getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
     setResult(RESULT_OK);
   }
 
-  private void insertMentor() {
-    ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.MENTOR_NAME, name.getText().toString().trim());
-    values.put(DatabaseHelper.MENTOR_PHONE, phone.getText().toString().trim());
-    values.put(DatabaseHelper.MENTOR_EMAIL, email.getText().toString().trim());
+  private void insertMentor(ContentValues values) {
     getContentResolver().insert(ItemProvider.MENTOR_CONTENT_URI, values);
     setResult(RESULT_OK);
   }

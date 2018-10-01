@@ -62,7 +62,12 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
   }
 
   public void handleDelete(View view) {
-    deleteAssessment();
+    switch (action) {
+      case Intent.ACTION_INSERT:
+        onBackPressed();
+      case Intent.ACTION_EDIT:
+        deleteAssessment();
+    }
   }
 
   private void deleteAssessment() {
@@ -72,30 +77,26 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
   }
 
   public void handleSave(View view) {
+    ContentValues values = new ContentValues();
+    values.put(DatabaseHelper.ASSESSMENT_TITLE, title.getText().toString().trim());
+    values.put(DatabaseHelper.ASSESSMENT_TYPE, spinner.getSelectedItem().toString().trim());
+    values.put(DatabaseHelper.ASSESSMENT_DUE_DATE, dueDate.getText().toString().trim());
     switch (action) {
       case Intent.ACTION_INSERT:
-        insertAssessment();
+        insertAssessment(values);
         break;
       case Intent.ACTION_EDIT:
-        updateAssessment();
+        updateAssessment(values);
     }
     finish();
   }
 
-  private void updateAssessment() {
-    ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.ASSESSMENT_TITLE, title.getText().toString().trim());
-    values.put(DatabaseHelper.ASSESSMENT_TYPE, spinner.getSelectedItem().toString().trim());
-    values.put(DatabaseHelper.ASSESSMENT_DUE_DATE, dueDate.getText().toString().trim());
+  private void updateAssessment(ContentValues values) {
     getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
     setResult(RESULT_OK);
   }
 
-  private void insertAssessment() {
-    ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.ASSESSMENT_TITLE, title.getText().toString().trim());
-    values.put(DatabaseHelper.ASSESSMENT_TYPE, spinner.getSelectedItem().toString().trim());
-    values.put(DatabaseHelper.ASSESSMENT_DUE_DATE, dueDate.getText().toString().trim());
+  private void insertAssessment(ContentValues values) {
     getContentResolver().insert(ItemProvider.ASSESSMENTS_CONTENT_URI, values);
     setResult(RESULT_OK);
   }

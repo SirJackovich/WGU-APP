@@ -10,16 +10,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CheckedTextView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
+import com.example.sirjackovich.wguapp.CheckBoxAdapter;
 import com.example.sirjackovich.wguapp.DatabaseHelper;
 import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
-public class CourseDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+import java.util.ArrayList;
+import java.util.List;
+
+public class CourseDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
   private EditText title;
   private EditText startDate;
   private EditText endDate;
@@ -28,32 +33,13 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   private String action;
   private String courseFilter;
   private CursorAdapter cursorAdapter;
+  private String courseID;
+  private List<Long> mentors;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_course_details);
-
-    String[] from = {DatabaseHelper.MENTOR_NAME};
-    int[] to = {android.R.id.text1};
-
-    cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, 0);
-
-    ListView listView = (ListView) findViewById(R.id.listView);
-
-    listView.setAdapter(cursorAdapter);
-
-//    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//      @Override
-//      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        Intent intent = new Intent(CoursesActivity.this, CourseDetailsActivity.class);
-//        Uri uri = Uri.parse(ItemProvider.COURSES_CONTENT_URI + "/" + id);
-//        intent.putExtra("Course", uri);
-//        startActivityForResult(intent, 1);
-//      }
-//    });
-
-    getLoaderManager().initLoader(0, null, this);
 
     title = (EditText) findViewById(R.id.title_edit_text);
     startDate = (EditText) findViewById(R.id.start_date_edit_text);
@@ -68,9 +54,11 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
     if (uri == null) {
       action = Intent.ACTION_INSERT;
       setTitle(getString(R.string.new_course_text));
+      mentors = new ArrayList<>();
     } else {
       action = Intent.ACTION_EDIT;
-      courseFilter = DatabaseHelper.COURSE_ID + "=" + uri.getLastPathSegment();
+      courseID = uri.getLastPathSegment();
+      courseFilter = DatabaseHelper.COURSE_ID + "=" + courseID;
       Cursor cursor = getContentResolver().query(uri, DatabaseHelper.COURSE_COLUMNS, courseFilter, null, null);
       if (cursor != null) {
         cursor.moveToFirst();
@@ -84,21 +72,48 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
 
     }
 
-//    listView.setOnTouchListener(new View.OnTouchListener() {
-//      // Setting on Touch Listener for handling the touch inside ScrollView
-//      @Override
-//      public boolean onTouch(View v, MotionEvent event) {
-//        // Disallow the touch request for parent scroll on touch of child view
-//        v.getParent().requestDisallowInterceptTouchEvent(true);
-//        return false;
-//      }
-//    });
-//
-//    setListViewHeightBasedOnChildren(listView);
+
+    String[] from = {DatabaseHelper.MENTOR_NAME};
+    int[] to = {android.R.id.text1};
+
+    cursorAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, 0, courseID);
+
+    ListView listView = (ListView) findViewById(R.id.listView);
+
+    listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+    listView.setAdapter(cursorAdapter);
+
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(courseID != null){
+          CheckedTextView checkbox = (CheckedTextView) view;
+          ContentValues values = new ContentValues();
+          String mentorFilter = DatabaseHelper.MENTOR_ID + "=" + id;
+          if (checkbox.isChecked()) {
+            values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
+            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
+          } else {
+            values.put(DatabaseHelper.MENTOR_COURSE_ID, "");
+            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
+          }
+        }else{
+          mentors.add(id);
+        }
+      }
+    });
+
+    getLoaderManager().initLoader(0, null, this);
   }
 
   public void handleDelete(View view) {
-    deleteCourse();
+    switch (action) {
+      case Intent.ACTION_INSERT:
+        onBackPressed();
+      case Intent.ACTION_EDIT:
+        deleteCourse();
+    }
   }
 
   private void deleteCourse() {
@@ -108,36 +123,43 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   }
 
   public void handleSave(View view) {
+    ContentValues values = new ContentValues();
+    values.put(DatabaseHelper.COURSE_TITLE, title.getText().toString().trim());
+    values.put(DatabaseHelper.COURSE_START_DATE, startDate.getText().toString().trim());
+    values.put(DatabaseHelper.COURSE_END_DATE, endDate.getText().toString().trim());
+    values.put(DatabaseHelper.COURSE_STATUS, status.getText().toString().trim());
+    values.put(DatabaseHelper.COURSE_NOTE, note.getText().toString().trim());
     switch (action) {
       case Intent.ACTION_INSERT:
-        insertCourse();
+        courseID = insertCourse(values);
+        updateMentors();
         break;
       case Intent.ACTION_EDIT:
-        updateCourse();
+        updateCourse(values);
     }
+    setResult(RESULT_OK);
     finish();
   }
 
-  private void updateCourse() {
-    ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.COURSE_TITLE, title.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_START_DATE, startDate.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_END_DATE, endDate.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_STATUS, status.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_NOTE, note.getText().toString().trim());
+  private void updateCourse(ContentValues values) {
     getContentResolver().update(ItemProvider.COURSES_CONTENT_URI, values, courseFilter, null);
-    setResult(RESULT_OK);
   }
 
-  private void insertCourse() {
-    ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.COURSE_TITLE, title.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_START_DATE, startDate.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_END_DATE, endDate.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_STATUS, status.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_NOTE, note.getText().toString().trim());
-    getContentResolver().insert(ItemProvider.COURSES_CONTENT_URI, values);
-    setResult(RESULT_OK);
+  private String insertCourse(ContentValues values) {
+    Uri uri = getContentResolver().insert(ItemProvider.COURSES_CONTENT_URI, values);
+    if (uri != null) {
+      return uri.getLastPathSegment();
+    }
+    return "";
+  }
+
+  private void updateMentors() {
+    for (int i = 0; i < mentors.size(); i++) {
+      ContentValues values = new ContentValues();
+      String mentorFilter = DatabaseHelper.MENTOR_ID + "=" + mentors.get(i);
+      values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
+      getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
+    }
   }
 
   @Override
@@ -154,30 +176,4 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   public void onLoaderReset(Loader<Cursor> loader) {
     cursorAdapter.swapCursor(null);
   }
-
-
-
-//  /**** Method for Setting the Height of the ListView dynamically.
-//   **** Hack to fix the issue of not showing all the items of the ListView
-//   **** when placed inside a ScrollView  ****/
-//  public static void setListViewHeightBasedOnChildren(ListView listView) {
-//    ListAdapter listAdapter = listView.getAdapter();
-//    if (listAdapter == null)
-//      return;
-//
-//    int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-//    int totalHeight = 0;
-//    View view = null;
-//    for (int i = 0; i < listAdapter.getCount(); i++) {
-//      view = listAdapter.getView(i, view, listView);
-//      if (i == 0)
-//        view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, RadioGroup.LayoutParams.WRAP_CONTENT));
-//
-//      view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-//      totalHeight += view.getMeasuredHeight();
-//    }
-//    ViewGroup.LayoutParams params = listView.getLayoutParams();
-//    params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-//    listView.setLayoutParams(params);
-//  }
 }
