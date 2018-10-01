@@ -27,6 +27,8 @@
   <string name="note_text">Note</string>
   <string name="term_details_text">Term Details</string>
   <string name="new_term_text">New Term</string>
+  <string name="delete_term_text">Term not deleted, remove courses from term before trying to delete it.</string>
+  <string name="share_text">Share</string>
   <string-array name="assessment_types">
     <item>Objective</item>
     <item>Performance</item>

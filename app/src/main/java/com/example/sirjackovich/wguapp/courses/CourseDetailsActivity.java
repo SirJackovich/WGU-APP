@@ -43,13 +43,17 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_course_details);
-
     initializeFields();
-
     initializeMentorList();
-
     initializeAssessmentList();
+  }
 
+  public void shareNote(View view) {
+    Intent sendIntent = new Intent();
+    sendIntent.setAction(Intent.ACTION_SEND);
+    sendIntent.putExtra(Intent.EXTRA_TEXT, note.getText().toString().trim());
+    sendIntent.setType("text/plain");
+    startActivity(sendIntent);
   }
 
   private void initializeFields() {
@@ -137,7 +141,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
     assessmentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(courseID != null){
+        if (courseID != null) {
           CheckedTextView checkbox = (CheckedTextView) view;
           ContentValues values = new ContentValues();
           String assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + id;
@@ -148,7 +152,7 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
             values.put(DatabaseHelper.ASSESSMENT_COURSE_ID, "");
             getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
           }
-        }else{
+        } else {
           assessments.add(id);
         }
       }
@@ -225,10 +229,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    if(id == assessmentFlag){
+    if (id == assessmentFlag) {
       return new CursorLoader(this, ItemProvider.ASSESSMENTS_CONTENT_URI, null, null, null, null);
     }
-    if(id == mentorFlag){
+    if (id == mentorFlag) {
       return new CursorLoader(this, ItemProvider.MENTOR_CONTENT_URI, null, null, null, null);
     }
     return null;
@@ -237,10 +241,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
     int id = loader.getId();
-    if(id == assessmentFlag){
+    if (id == assessmentFlag) {
       assessmentAdapter.swapCursor(data);
     }
-    if(id == mentorFlag){
+    if (id == mentorFlag) {
       mentorAdapter.swapCursor(data);
     }
   }
@@ -248,10 +252,10 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   @Override
   public void onLoaderReset(Loader<Cursor> loader) {
     int id = loader.getId();
-    if(id == assessmentFlag){
+    if (id == assessmentFlag) {
       assessmentAdapter.swapCursor(null);
     }
-    if(id == mentorFlag){
+    if (id == mentorFlag) {
       mentorAdapter.swapCursor(null);
     }
   }

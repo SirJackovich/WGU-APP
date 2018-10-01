@@ -123,7 +123,7 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
     Cursor cursor = getContentResolver().query(ItemProvider.COURSES_CONTENT_URI, courseTermIDs, filter, null, null);
     if (cursor != null) {
       if (cursor.moveToFirst()){
-        Toast.makeText(TermDetailsActivity.this, "Term not deleted, remove courses from term before trying to delete it.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(TermDetailsActivity.this, R.string.delete_term_text, Toast.LENGTH_LONG).show();
         cursor.close();
       }else{
         getContentResolver().delete(ItemProvider.TERMS_CONTENT_URI, termFilter, null);
