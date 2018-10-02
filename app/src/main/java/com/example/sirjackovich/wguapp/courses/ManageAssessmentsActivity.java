@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
@@ -22,7 +21,6 @@ import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ManageAssessmentsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
   private int assessmentFlag = 2;
@@ -54,16 +52,13 @@ public class ManageAssessmentsActivity extends AppCompatActivity implements Load
     String[] from = {DatabaseHelper.ASSESSMENT_TITLE};
     int[] to = {android.R.id.text1};
 
-
-    adapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, assessmentFlag, courseID);
-
     ListView listView = (ListView) findViewById(R.id.listView);
 
     listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
+    adapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, assessmentFlag, courseID);
+
     listView.setAdapter(adapter);
-
-
 
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
@@ -90,7 +85,6 @@ public class ManageAssessmentsActivity extends AppCompatActivity implements Load
     });
 
     getLoaderManager().initLoader(0, null, this);
-
 
   }
 
@@ -124,7 +118,7 @@ public class ManageAssessmentsActivity extends AppCompatActivity implements Load
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch(item.getItemId()) {
+    switch (item.getItemId()) {
       case android.R.id.home:
         onBackPressed();
         return true;

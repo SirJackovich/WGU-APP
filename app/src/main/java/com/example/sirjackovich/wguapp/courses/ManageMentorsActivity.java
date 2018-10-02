@@ -54,10 +54,9 @@ public class ManageMentorsActivity extends AppCompatActivity implements LoaderMa
     String[] from = {DatabaseHelper.MENTOR_NAME};
     int[] to = {android.R.id.text1};
 
+    ListView listView = (ListView) findViewById(R.id.listView);
 
     adapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, mentorFlag, courseID);
-
-    ListView listView = (ListView) findViewById(R.id.listView);
 
     listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 

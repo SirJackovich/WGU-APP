@@ -77,9 +77,9 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
     String[] from = {DatabaseHelper.COURSE_TITLE};
     int[] to = {android.R.id.text1};
 
-    courseAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, 3, termID);
-
     ListView listView = (ListView) findViewById(R.id.course_list_view);
+
+    courseAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, 3, termID);
 
     listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
