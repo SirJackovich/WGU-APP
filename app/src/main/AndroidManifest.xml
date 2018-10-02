@@ -1,89 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sirjackovich.wguapp" >
+  package="com.example.sirjackovich.wguapp">
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".MainActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+  <application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:theme="@style/AppTheme">
+    <activity android:name=".MainActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".assessments.AssessmentsActivity"
-            android:label="@string/assessments_text"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity
-            android:name=".assessments.AssessmentDetailsActivity"
-            android:label="@string/assessment_details_text"
-            android:parentActivityName=".assessments.AssessmentsActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".assessments.AssessmentsActivity" />
-        </activity>
-        <activity
-            android:name=".mentors.MentorsActivity"
-            android:label="@string/mentors_text"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity
-            android:name=".mentors.MentorDetailsActivity"
-            android:label="@string/mentor_details_text"
-            android:parentActivityName=".mentors.MentorsActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".mentors.MentorsActivity" />
-        </activity>
-        <activity
-            android:name=".courses.CoursesActivity"
-            android:label="@string/courses_text"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity
-            android:name=".courses.CourseDetailsActivity"
-            android:label="@string/course_details_text"
-            android:parentActivityName=".courses.CoursesActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".courses.CoursesActivity" />
-        </activity>
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name=".assessments.AssessmentsActivity"
+      android:label="@string/assessments_text"
+      android:parentActivityName=".MainActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".MainActivity" />
+    </activity>
+    <activity
+      android:name=".assessments.AssessmentDetailsActivity"
+      android:label="@string/assessment_details_text"
+      android:parentActivityName=".assessments.AssessmentsActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".assessments.AssessmentsActivity" />
+    </activity>
+    <activity
+      android:name=".mentors.MentorsActivity"
+      android:label="@string/mentors_text"
+      android:parentActivityName=".MainActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".MainActivity" />
+    </activity>
+    <activity
+      android:name=".mentors.MentorDetailsActivity"
+      android:label="@string/mentor_details_text"
+      android:parentActivityName=".mentors.MentorsActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".mentors.MentorsActivity" />
+    </activity>
+    <activity
+      android:name=".courses.CoursesActivity"
+      android:label="@string/courses_text"
+      android:parentActivityName=".MainActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".MainActivity" />
+    </activity>
+    <activity
+      android:name=".courses.CourseDetailsActivity"
+      android:label="@string/course_details_text"
+      android:parentActivityName=".courses.CoursesActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".courses.CoursesActivity" />
+    </activity>
+    <activity
+      android:name=".courses.ManageMentorsActivity"
+      android:label="@string/mentors_text"
+      android:parentActivityName=".courses.CourseDetailsActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".courses.CourseDetailsActivity" />
+    </activity>
+    <activity
+      android:name=".courses.ManageAssessmentsActivity"
+      android:label="@string/assessments_text"
+      android:parentActivityName=".courses.CourseDetailsActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".courses.CourseDetailsActivity" />
+    </activity>
+    <activity
+      android:name=".terms.TermsActivity"
+      android:label="@string/terms_text"
+      android:parentActivityName=".MainActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".MainActivity" />
+    </activity>
+    <activity
+      android:name=".terms.TermDetailsActivity"
+      android:label="@string/term_details_text"
+      android:parentActivityName=".terms.TermsActivity">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".terms.TermsActivity" />
+    </activity>
 
-        <activity
-          android:name=".terms.TermsActivity"
-          android:label="@string/terms_text"
-          android:parentActivityName=".MainActivity" >
-            <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value=".MainActivity" />
-        </activity>
-        <activity
-          android:name=".terms.TermDetailsActivity"
-          android:label="@string/term_details_text"
-          android:parentActivityName=".terms.TermsActivity" >
-            <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value=".terms.TermsActivity" />
-        </activity>
+    <provider
+      android:name=".ItemProvider"
+      android:authorities="com.example.sirjackovich.itemprovider"
+      android:exported="false" />
 
-        <provider
-            android:name=".ItemProvider"
-            android:authorities="com.example.sirjackovich.itemprovider"
-            android:exported="false" />
-    </application>
+
+  </application>
 
 </manifest>

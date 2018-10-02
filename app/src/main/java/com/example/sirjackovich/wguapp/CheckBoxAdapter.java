@@ -5,8 +5,11 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class CheckBoxAdapter extends SimpleCursorAdapter {
   private String itemID;
@@ -27,7 +30,8 @@ public class CheckBoxAdapter extends SimpleCursorAdapter {
 
   @Override
   public void bindView(View view, Context context, Cursor cursor) {
-    CheckedTextView checkbox = (CheckedTextView)view;
+    CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkBox);
+    TextView textView = (TextView) view.findViewById(R.id.textView);
     int mentorFlag = 1;
     int assessmentFlag = 2;
     int courseFlag = 3;
@@ -56,6 +60,6 @@ public class CheckBoxAdapter extends SimpleCursorAdapter {
     if(flag == courseFlag){
       name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COURSE_TITLE));
     }
-    checkbox.setText(name);
+    textView.setText(name);
   }
 }

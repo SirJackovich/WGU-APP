@@ -49,10 +49,6 @@ public class CoursesActivity extends AppCompatActivity implements LoaderManager.
     getLoaderManager().initLoader(0, null, this);
   }
 
-  private void restartLoader() {
-    getLoaderManager().restartLoader(0, null, this);
-  }
-
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
     return new CursorLoader(this, ItemProvider.COURSES_CONTENT_URI, null, null, null, null);
@@ -77,7 +73,7 @@ public class CoursesActivity extends AppCompatActivity implements LoaderManager.
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == 1 && resultCode == RESULT_OK) {
-      restartLoader();
+      getLoaderManager().restartLoader(0, null, this);
     }
   }
 }

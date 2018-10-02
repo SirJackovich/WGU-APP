@@ -1,29 +1,19 @@
 package com.example.sirjackovich.wguapp.courses;
 
-import android.app.LoaderManager;
 import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
-import android.widget.ListView;
 
-import com.example.sirjackovich.wguapp.CheckBoxAdapter;
 import com.example.sirjackovich.wguapp.DatabaseHelper;
 import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CourseDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CourseDetailsActivity extends AppCompatActivity {
   private EditText title;
   private EditText startDate;
   private EditText endDate;
@@ -31,32 +21,13 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
   private EditText note;
   private String action;
   private String courseFilter;
-  private CheckBoxAdapter mentorAdapter;
-  private CheckBoxAdapter assessmentAdapter;
   private String courseID;
-  private List<Long> mentors;
-  private List<Long> assessments;
-  private int mentorFlag = 1;
-  private int assessmentFlag = 2;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_course_details);
-    initializeFields();
-    initializeMentorList();
-    initializeAssessmentList();
-  }
 
-  public void shareNote(View view) {
-    Intent sendIntent = new Intent();
-    sendIntent.setAction(Intent.ACTION_SEND);
-    sendIntent.putExtra(Intent.EXTRA_TEXT, note.getText().toString().trim());
-    sendIntent.setType("text/plain");
-    startActivity(sendIntent);
-  }
-
-  private void initializeFields() {
     title = (EditText) findViewById(R.id.title_edit_text);
     startDate = (EditText) findViewById(R.id.start_date_edit_text);
     endDate = (EditText) findViewById(R.id.end_date_edit_text);
@@ -70,8 +41,6 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
     if (uri == null) {
       action = Intent.ACTION_INSERT;
       setTitle(getString(R.string.new_course_text));
-      mentors = new ArrayList<>();
-      assessments = new ArrayList<>();
     } else {
       action = Intent.ACTION_EDIT;
       courseID = uri.getLastPathSegment();
@@ -90,75 +59,12 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
     }
   }
 
-  private void initializeMentorList() {
-    String[] mentorFrom = {DatabaseHelper.MENTOR_NAME};
-    int[] mentorTo = {android.R.id.text1};
-
-    mentorAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, mentorFrom, mentorTo, mentorFlag, courseID);
-
-    ListView mentorListView = (ListView) findViewById(R.id.mentor_list_view);
-
-    mentorListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
-    mentorListView.setAdapter(mentorAdapter);
-
-    mentorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (courseID != null) {
-          CheckedTextView checkbox = (CheckedTextView) view;
-          ContentValues values = new ContentValues();
-          String mentorFilter = DatabaseHelper.MENTOR_ID + "=" + id;
-          if (checkbox.isChecked()) {
-            values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
-            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
-          } else {
-            values.put(DatabaseHelper.MENTOR_COURSE_ID, "");
-            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
-          }
-        } else {
-          mentors.add(id);
-        }
-      }
-    });
-
-    getLoaderManager().initLoader(mentorFlag, null, this);
-  }
-
-  private void initializeAssessmentList() {
-    // TODO: combine this and initializeMentor list into one function
-    String[] assessmentFrom = {DatabaseHelper.ASSESSMENT_TITLE};
-    int[] assessmentTo = {android.R.id.text1};
-
-    assessmentAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, assessmentFrom, assessmentTo, assessmentFlag, courseID);
-
-    ListView assessmentListView = (ListView) findViewById(R.id.assessment_list_view);
-
-    assessmentListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
-    assessmentListView.setAdapter(assessmentAdapter);
-
-    assessmentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (courseID != null) {
-          CheckedTextView checkbox = (CheckedTextView) view;
-          ContentValues values = new ContentValues();
-          String assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + id;
-          if (checkbox.isChecked()) {
-            values.put(DatabaseHelper.ASSESSMENT_COURSE_ID, courseID);
-            getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
-          } else {
-            values.put(DatabaseHelper.ASSESSMENT_COURSE_ID, "");
-            getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
-          }
-        } else {
-          assessments.add(id);
-        }
-      }
-    });
-
-    getLoaderManager().initLoader(assessmentFlag, null, this);
+  public void shareNote(View view) {
+    Intent sendIntent = new Intent();
+    sendIntent.setAction(Intent.ACTION_SEND);
+    sendIntent.putExtra(Intent.EXTRA_TEXT, note.getText().toString().trim());
+    sendIntent.setType("text/plain");
+    startActivity(sendIntent);
   }
 
   public void handleDelete(View view) {
@@ -168,6 +74,24 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
       case Intent.ACTION_EDIT:
         deleteCourse();
     }
+  }
+
+  public void handleMentors(View view) {
+    Intent intent = new Intent(CourseDetailsActivity.this, ManageMentorsActivity.class);
+    if (courseID != null) {
+      Uri uri = Uri.parse(ItemProvider.COURSES_CONTENT_URI + "/" + courseID);
+      intent.putExtra("Course", uri);
+    }
+    startActivityForResult(intent, 1);
+  }
+
+  public void handleAssessments(View view) {
+    Intent intent = new Intent(CourseDetailsActivity.this, ManageAssessmentsActivity.class);
+    if (courseID != null) {
+      Uri uri = Uri.parse(ItemProvider.COURSES_CONTENT_URI + "/" + courseID);
+      intent.putExtra("Course", uri);
+    }
+    startActivityForResult(intent, 1);
   }
 
   private void deleteCourse() {
@@ -186,8 +110,6 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
     switch (action) {
       case Intent.ACTION_INSERT:
         courseID = insertCourse(values);
-        updateMentors();
-        updateAssessments();
         break;
       case Intent.ACTION_EDIT:
         updateCourse(values);
@@ -206,57 +128,5 @@ public class CourseDetailsActivity extends AppCompatActivity implements LoaderMa
       return uri.getLastPathSegment();
     }
     return "";
-  }
-
-  private void updateMentors() {
-    for (int i = 0; i < mentors.size(); i++) {
-      ContentValues values = new ContentValues();
-      String mentorFilter = DatabaseHelper.MENTOR_ID + "=" + mentors.get(i);
-      values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
-      getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
-    }
-  }
-
-  private void updateAssessments() {
-    // TODO: combine this with updateMentors
-    for (int i = 0; i < assessments.size(); i++) {
-      ContentValues values = new ContentValues();
-      String assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + assessments.get(i);
-      values.put(DatabaseHelper.ASSESSMENT_COURSE_ID, courseID);
-      getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
-    }
-  }
-
-  @Override
-  public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    if (id == assessmentFlag) {
-      return new CursorLoader(this, ItemProvider.ASSESSMENTS_CONTENT_URI, null, null, null, null);
-    }
-    if (id == mentorFlag) {
-      return new CursorLoader(this, ItemProvider.MENTOR_CONTENT_URI, null, null, null, null);
-    }
-    return null;
-  }
-
-  @Override
-  public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-    int id = loader.getId();
-    if (id == assessmentFlag) {
-      assessmentAdapter.swapCursor(data);
-    }
-    if (id == mentorFlag) {
-      mentorAdapter.swapCursor(data);
-    }
-  }
-
-  @Override
-  public void onLoaderReset(Loader<Cursor> loader) {
-    int id = loader.getId();
-    if (id == assessmentFlag) {
-      assessmentAdapter.swapCursor(null);
-    }
-    if (id == mentorFlag) {
-      mentorAdapter.swapCursor(null);
-    }
   }
 }

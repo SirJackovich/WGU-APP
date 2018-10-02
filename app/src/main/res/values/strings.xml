@@ -28,7 +28,11 @@
   <string name="term_details_text">Term Details</string>
   <string name="new_term_text">New Term</string>
   <string name="delete_term_text">Term not deleted, remove courses from term before trying to delete it.</string>
-  <string name="share_text">Share</string>
+  <string name="share_text">Share Note</string>
+  <string name="add_assessments_text">Add Assessments</string>
+  <string name="edit_assessments_text">Edit Assessments</string>
+  <string name="edit_mentors_text">Edit Mentors</string>
+  <string name="add_mentors_text">Add Mentors</string>
   <string-array name="assessment_types">
     <item>Objective</item>
     <item>Performance</item>
