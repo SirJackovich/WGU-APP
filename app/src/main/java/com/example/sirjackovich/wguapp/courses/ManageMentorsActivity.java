@@ -26,7 +26,7 @@ import java.util.List;
 public class ManageMentorsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
   private int mentorFlag = 1;
   private String action;
-  private List<Long> mentors;
+  private ArrayList<String> mentors;
   private String courseID;
   private String courseFilter;
   private CheckBoxAdapter adapter;
@@ -62,37 +62,45 @@ public class ManageMentorsActivity extends AppCompatActivity implements LoaderMa
 
     listView.setAdapter(adapter);
 
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (courseID != null) {
-          CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkBox);
-          ContentValues values = new ContentValues();
-          String filter = DatabaseHelper.MENTOR_ID + "=" + id;
-          if (checkbox.isChecked()) {
-            values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
-            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
-          } else {
-            values.put(DatabaseHelper.MENTOR_COURSE_ID, "");
-            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
-          }
-        } else {
-          mentors.add(id);
-        }
-      }
-    });
+//    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//      @Override
+//      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkBox);
+//        if (courseID != null) {
+//          ContentValues values = new ContentValues();
+//          String filter = DatabaseHelper.MENTOR_ID + "=" + id;
+//          if (checkbox.isChecked()) {
+//            values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
+//            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
+//          } else {
+//            values.put(DatabaseHelper.MENTOR_COURSE_ID, "");
+//            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
+//          }
+//        } else {
+//          if (checkbox.isChecked()) {
+//            mentors.add(Long.toString(id));
+//          }else{
+//            mentors.remove(Long.toString(id));
+//          }
+//        }
+//      }
+//    });
 
     getLoaderManager().initLoader(0, null, this);
 
 
   }
 
-  private void updateMentors() {
-    for (int i = 0; i < mentors.size(); i++) {
-      ContentValues values = new ContentValues();
-      String mentorFilter = DatabaseHelper.MENTOR_ID + "=" + mentors.get(i);
-      values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
-      getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
+  public void handleSave(View view) {
+    switch (action) {
+      case Intent.ACTION_INSERT:
+        Intent intent = new Intent();
+        intent.putStringArrayListExtra("Mentors", mentors);
+        setResult(RESULT_OK, intent);
+        finish();
+      case Intent.ACTION_EDIT:
+        setResult(RESULT_OK);
+        finish();
     }
   }
 

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import com.example.sirjackovich.wguapp.CheckBoxAdapter;
@@ -26,7 +27,7 @@ import java.util.List;
 public class ManageAssessmentsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
   private int assessmentFlag = 2;
   private String action;
-  private List<Long> assessments;
+  private ArrayList<String> assessments;
   private String courseID;
   private String courseFilter;
   private CheckBoxAdapter adapter;
@@ -54,7 +55,7 @@ public class ManageAssessmentsActivity extends AppCompatActivity implements Load
     int[] to = {android.R.id.text1};
 
 
-    adapter = new CheckBoxAdapter(this, R.layout.list_item, null, from, to, assessmentFlag, courseID);
+    adapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, assessmentFlag, courseID);
 
     ListView listView = (ListView) findViewById(R.id.listView);
 
@@ -62,11 +63,13 @@ public class ManageAssessmentsActivity extends AppCompatActivity implements Load
 
     listView.setAdapter(adapter);
 
+
+
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        CheckedTextView checkbox = (CheckedTextView) view;
         if (courseID != null) {
-          CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkBox);
           ContentValues values = new ContentValues();
           String filter = DatabaseHelper.ASSESSMENT_ID + "=" + id;
           if (checkbox.isChecked()) {
@@ -77,7 +80,11 @@ public class ManageAssessmentsActivity extends AppCompatActivity implements Load
             getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, filter, null);
           }
         } else {
-          assessments.add(id);
+          if (checkbox.isChecked()) {
+            assessments.add(Long.toString(id));
+          } else {
+            assessments.remove(Long.toString(id));
+          }
         }
       }
     });
@@ -87,14 +94,18 @@ public class ManageAssessmentsActivity extends AppCompatActivity implements Load
 
   }
 
-//  private void handleSave(View view) {
-//    for (int i = 0; i < assessments.size(); i++) {
-//      ContentValues values = new ContentValues();
-//      String assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + assessments.get(i);
-//      values.put(DatabaseHelper.ASSESSMENT_COURSE_ID, courseID);
-//      getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
-//    }
-//  }
+  public void handleSave(View view) {
+    switch (action) {
+      case Intent.ACTION_INSERT:
+        Intent intent = new Intent();
+        intent.putStringArrayListExtra("Assessments", assessments);
+        setResult(RESULT_OK, intent);
+        finish();
+      case Intent.ACTION_EDIT:
+        setResult(RESULT_OK);
+        finish();
+    }
+  }
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {

@@ -30,8 +30,7 @@ public class CheckBoxAdapter extends SimpleCursorAdapter {
 
   @Override
   public void bindView(View view, Context context, Cursor cursor) {
-    CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkBox);
-    TextView textView = (TextView) view.findViewById(R.id.textView);
+    CheckedTextView checkbox = (CheckedTextView) view;
     int mentorFlag = 1;
     int assessmentFlag = 2;
     int courseFlag = 3;
@@ -60,6 +59,6 @@ public class CheckBoxAdapter extends SimpleCursorAdapter {
     if(flag == courseFlag){
       name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COURSE_TITLE));
     }
-    textView.setText(name);
+    checkbox.setText(name);
   }
 }

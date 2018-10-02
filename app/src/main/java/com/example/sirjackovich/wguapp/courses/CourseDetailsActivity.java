@@ -13,6 +13,8 @@ import com.example.sirjackovich.wguapp.DatabaseHelper;
 import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
+import java.util.ArrayList;
+
 public class CourseDetailsActivity extends AppCompatActivity {
   private EditText title;
   private EditText startDate;
@@ -22,6 +24,8 @@ public class CourseDetailsActivity extends AppCompatActivity {
   private String action;
   private String courseFilter;
   private String courseID;
+  private ArrayList<String> assessments;
+  private ArrayList<String> mentors;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,8 @@ public class CourseDetailsActivity extends AppCompatActivity {
     if (uri == null) {
       action = Intent.ACTION_INSERT;
       setTitle(getString(R.string.new_course_text));
+      assessments = new ArrayList<>();
+      mentors = new ArrayList<>();
     } else {
       action = Intent.ACTION_EDIT;
       courseID = uri.getLastPathSegment();
@@ -82,7 +88,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
       Uri uri = Uri.parse(ItemProvider.COURSES_CONTENT_URI + "/" + courseID);
       intent.putExtra("Course", uri);
     }
-    startActivityForResult(intent, 1);
+    startActivityForResult(intent, 2);
   }
 
   public void handleAssessments(View view) {
@@ -110,12 +116,32 @@ public class CourseDetailsActivity extends AppCompatActivity {
     switch (action) {
       case Intent.ACTION_INSERT:
         courseID = insertCourse(values);
+        addAssessments();
+        addMentors();
         break;
       case Intent.ACTION_EDIT:
         updateCourse(values);
     }
     setResult(RESULT_OK);
     finish();
+  }
+
+  private void addAssessments() {
+    for (int i = 0; i < assessments.size(); i++) {
+      ContentValues values = new ContentValues();
+      String assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + assessments.get(i);
+      values.put(DatabaseHelper.ASSESSMENT_COURSE_ID, courseID);
+      getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
+    }
+  }
+
+  private void addMentors() {
+    for (int i = 0; i < mentors.size(); i++) {
+      ContentValues values = new ContentValues();
+      String mentorFilter = DatabaseHelper.MENTOR_ID + "=" + mentors.get(i);
+      values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
+      getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, mentorFilter, null);
+    }
   }
 
   private void updateCourse(ContentValues values) {
@@ -128,5 +154,21 @@ public class CourseDetailsActivity extends AppCompatActivity {
       return uri.getLastPathSegment();
     }
     return "";
+  }
+
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if(action.equals(Intent.ACTION_INSERT)){
+      if (requestCode == 1) {
+        if (resultCode == RESULT_OK) {
+          assessments = data.getStringArrayListExtra("Assessments");
+        }
+      }
+      if (requestCode == 2) {
+        if (resultCode == RESULT_OK) {
+          mentors = data.getStringArrayListExtra("Mentors");
+        }
+      }
+    }
   }
 }
