@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import com.example.sirjackovich.wguapp.CheckBoxAdapter;
@@ -54,7 +55,7 @@ public class ManageMentorsActivity extends AppCompatActivity implements LoaderMa
     int[] to = {android.R.id.text1};
 
 
-    adapter = new CheckBoxAdapter(this, R.layout.list_item, null, from, to, mentorFlag, courseID);
+    adapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, mentorFlag, courseID);
 
     ListView listView = (ListView) findViewById(R.id.listView);
 
@@ -62,33 +63,31 @@ public class ManageMentorsActivity extends AppCompatActivity implements LoaderMa
 
     listView.setAdapter(adapter);
 
-//    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//      @Override
-//      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkBox);
-//        if (courseID != null) {
-//          ContentValues values = new ContentValues();
-//          String filter = DatabaseHelper.MENTOR_ID + "=" + id;
-//          if (checkbox.isChecked()) {
-//            values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
-//            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
-//          } else {
-//            values.put(DatabaseHelper.MENTOR_COURSE_ID, "");
-//            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
-//          }
-//        } else {
-//          if (checkbox.isChecked()) {
-//            mentors.add(Long.toString(id));
-//          }else{
-//            mentors.remove(Long.toString(id));
-//          }
-//        }
-//      }
-//    });
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        CheckedTextView checkbox = (CheckedTextView) view;
+        if (courseID != null) {
+          ContentValues values = new ContentValues();
+          String filter = DatabaseHelper.MENTOR_ID + "=" + id;
+          if (checkbox.isChecked()) {
+            values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
+            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
+          } else {
+            values.put(DatabaseHelper.MENTOR_COURSE_ID, "");
+            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
+          }
+        } else {
+          if (checkbox.isChecked()) {
+            mentors.add(Long.toString(id));
+          }else{
+            mentors.remove(Long.toString(id));
+          }
+        }
+      }
+    });
 
     getLoaderManager().initLoader(0, null, this);
-
-
   }
 
   public void handleSave(View view) {
