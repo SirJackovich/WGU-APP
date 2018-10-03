@@ -12,7 +12,6 @@
   <string name="due_date_text">Due Date</string>
   <string name="delete_text">Delete</string>
   <string name="save_text">Save</string>
-  <string name="date_placeholder">00/00/0000</string>
   <string name="new_assessment">New Assessment</string>
   <string name="new_mentor">New Mentor</string>
   <string name="name_text">Name</string>
@@ -35,6 +34,9 @@
   <string name="add_mentors_text">Add Mentors</string>
   <string name="add_courses_text">Add Courses</string>
   <string name="edit_courses_text">Edit Courses</string>
+  <string name="alert_text">Alert?</string>
+  <string name="valid_date_string">Please enter a valid date.</string>
+  <string name="date_format_text">MM/dd/yyyy HH:mm:ss</string>
   <string-array name="assessment_types">
     <item>Objective</item>
     <item>Performance</item>
