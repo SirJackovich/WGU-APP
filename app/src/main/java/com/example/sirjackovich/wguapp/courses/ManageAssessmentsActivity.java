@@ -23,7 +23,6 @@ import com.example.sirjackovich.wguapp.R;
 import java.util.ArrayList;
 
 public class ManageAssessmentsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-  private int assessmentFlag = 2;
   private String action;
   private ArrayList<String> assessments;
   private String courseID;
@@ -56,7 +55,7 @@ public class ManageAssessmentsActivity extends AppCompatActivity implements Load
 
     listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-    adapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, assessmentFlag, courseID);
+    adapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, 2, courseID);
 
     listView.setAdapter(adapter);
 

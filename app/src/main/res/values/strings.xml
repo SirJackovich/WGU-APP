@@ -33,6 +33,8 @@
   <string name="edit_assessments_text">Edit Assessments</string>
   <string name="edit_mentors_text">Edit Mentors</string>
   <string name="add_mentors_text">Add Mentors</string>
+  <string name="add_courses_text">Add Courses</string>
+  <string name="edit_courses_text">Edit Courses</string>
   <string-array name="assessment_types">
     <item>Objective</item>
     <item>Performance</item>

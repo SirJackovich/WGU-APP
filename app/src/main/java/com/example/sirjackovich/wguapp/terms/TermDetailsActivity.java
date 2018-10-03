@@ -20,6 +20,7 @@ import com.example.sirjackovich.wguapp.CheckBoxAdapter;
 import com.example.sirjackovich.wguapp.DatabaseHelper;
 import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
+import com.example.sirjackovich.wguapp.courses.ManageAssessmentsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,20 +33,13 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
   private String termFilter;
   private CheckBoxAdapter courseAdapter;
   private String termID;
-  private List<Long> courses;
+  private ArrayList<String> courses;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_term_details);
 
-    initializeFields();
-
-    initializeCourseList();
-
-  }
-
-  private void initializeFields() {
     title = (EditText) findViewById(R.id.title_edit_text);
     startDate = (EditText) findViewById(R.id.start_date_edit_text);
     endDate = (EditText) findViewById(R.id.end_date_edit_text);
@@ -71,41 +65,6 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
         cursor.close();
       }
     }
-  }
-
-  private void initializeCourseList() {
-    String[] from = {DatabaseHelper.COURSE_TITLE};
-    int[] to = {android.R.id.text1};
-
-    ListView listView = (ListView) findViewById(R.id.course_list_view);
-
-    courseAdapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, 3, termID);
-
-    listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
-    listView.setAdapter(courseAdapter);
-
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (termID != null) {
-          CheckedTextView checkbox = (CheckedTextView) view;
-          ContentValues values = new ContentValues();
-          String courseFilter = DatabaseHelper.COURSE_ID + "=" + id;
-          if (checkbox.isChecked()) {
-            values.put(DatabaseHelper.COURSE_TERM_ID, termID);
-            getContentResolver().update(ItemProvider.COURSES_CONTENT_URI, values, courseFilter, null);
-          } else {
-            values.put(DatabaseHelper.COURSE_TERM_ID, "");
-            getContentResolver().update(ItemProvider.COURSES_CONTENT_URI, values, courseFilter, null);
-          }
-        } else {
-          courses.add(id);
-        }
-      }
-    });
-
-    getLoaderManager().initLoader(0, null, this);
   }
 
   public void handleDelete(View view) {
@@ -140,7 +99,7 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
     values.put(DatabaseHelper.TERM_END_DATE, endDate.getText().toString().trim());
     switch (action) {
       case Intent.ACTION_INSERT:
-        termFilter = insertTerm(values);
+        termID = insertTerm(values);
         updateCourses();
         break;
       case Intent.ACTION_EDIT:
@@ -171,6 +130,15 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
     }
   }
 
+  public void handleCourses(View view) {
+    Intent intent = new Intent(TermDetailsActivity.this, ManageCoursesActivity.class);
+    if (termID != null) {
+      Uri uri = Uri.parse(ItemProvider.TERMS_CONTENT_URI + "/" + termID);
+      intent.putExtra("Term", uri);
+    }
+    startActivityForResult(intent, 1);
+  }
+
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
     return new CursorLoader(this, ItemProvider.COURSES_CONTENT_URI, null, null, null, null);
@@ -184,5 +152,16 @@ public class TermDetailsActivity extends AppCompatActivity implements LoaderMana
   @Override
   public void onLoaderReset(Loader<Cursor> loader) {
     courseAdapter.swapCursor(null);
+  }
+
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if(action.equals(Intent.ACTION_INSERT)){
+      if (requestCode == 1) {
+        if (resultCode == RESULT_OK) {
+          courses = data.getStringArrayListExtra("Courses");
+        }
+      }
+    }
   }
 }

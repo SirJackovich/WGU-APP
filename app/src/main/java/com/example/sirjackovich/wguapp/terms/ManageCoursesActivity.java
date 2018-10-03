@@ -1,4 +1,4 @@
-package com.example.sirjackovich.wguapp.courses;
+package com.example.sirjackovich.wguapp.terms;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
@@ -22,42 +21,41 @@ import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ManageMentorsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ManageCoursesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
   private String action;
-  private ArrayList<String> mentors;
-  private String courseID;
-  private String courseFilter;
+  private ArrayList<String> courses;
+  private String termID;
+  private String termFilter;
   private CheckBoxAdapter adapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_manage_mentors);
+    setContentView(R.layout.activity_manage_courses);
 
     Intent intent = getIntent();
 
-    Uri uri = intent.getParcelableExtra("Course");
+    Uri uri = intent.getParcelableExtra("Term");
 
     if (uri == null) {
       action = Intent.ACTION_INSERT;
-      mentors = new ArrayList<>();
-      setTitle(getString(R.string.add_mentors_text));
+      courses = new ArrayList<>();
+      setTitle(getString(R.string.add_courses_text));
     } else {
-      setTitle(getString(R.string.edit_mentors_text));
       action = Intent.ACTION_EDIT;
-      courseID = uri.getLastPathSegment();
+      termID = uri.getLastPathSegment();
+      setTitle(getString(R.string.edit_courses_text));
     }
 
-    String[] from = {DatabaseHelper.MENTOR_NAME};
+    String[] from = {DatabaseHelper.COURSE_TITLE};
     int[] to = {android.R.id.text1};
 
     ListView listView = (ListView) findViewById(R.id.listView);
 
-    adapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, 1, courseID);
-
     listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+    adapter = new CheckBoxAdapter(this, android.R.layout.simple_list_item_multiple_choice, null, from, to, 3, termID);
 
     listView.setAdapter(adapter);
 
@@ -65,34 +63,35 @@ public class ManageMentorsActivity extends AppCompatActivity implements LoaderMa
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         CheckedTextView checkbox = (CheckedTextView) view;
-        if (courseID != null) {
+        if (termID != null) {
           ContentValues values = new ContentValues();
-          String filter = DatabaseHelper.MENTOR_ID + "=" + id;
+          String filter = DatabaseHelper.COURSE_ID + "=" + id;
           if (checkbox.isChecked()) {
-            values.put(DatabaseHelper.MENTOR_COURSE_ID, courseID);
-            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
+            values.put(DatabaseHelper.COURSE_TERM_ID, termID);
+            getContentResolver().update(ItemProvider.COURSES_CONTENT_URI, values, filter, null);
           } else {
-            values.put(DatabaseHelper.MENTOR_COURSE_ID, "");
-            getContentResolver().update(ItemProvider.MENTOR_CONTENT_URI, values, filter, null);
+            values.put(DatabaseHelper.COURSE_TERM_ID, "");
+            getContentResolver().update(ItemProvider.COURSES_CONTENT_URI, values, filter, null);
           }
         } else {
           if (checkbox.isChecked()) {
-            mentors.add(Long.toString(id));
-          }else{
-            mentors.remove(Long.toString(id));
+            courses.add(Long.toString(id));
+          } else {
+            courses.remove(Long.toString(id));
           }
         }
       }
     });
 
     getLoaderManager().initLoader(0, null, this);
+
   }
 
   public void handleSave(View view) {
     switch (action) {
       case Intent.ACTION_INSERT:
         Intent intent = new Intent();
-        intent.putStringArrayListExtra("Mentors", mentors);
+        intent.putStringArrayListExtra("Courses", courses);
         setResult(RESULT_OK, intent);
         finish();
       case Intent.ACTION_EDIT:
@@ -103,7 +102,7 @@ public class ManageMentorsActivity extends AppCompatActivity implements LoaderMa
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    return new CursorLoader(this, ItemProvider.MENTOR_CONTENT_URI, null, null, null, null);
+    return new CursorLoader(this, ItemProvider.COURSES_CONTENT_URI, null, null, null, null);
   }
 
   @Override
@@ -118,7 +117,7 @@ public class ManageMentorsActivity extends AppCompatActivity implements LoaderMa
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch(item.getItemId()) {
+    switch (item.getItemId()) {
       case android.R.id.home:
         onBackPressed();
         return true;
