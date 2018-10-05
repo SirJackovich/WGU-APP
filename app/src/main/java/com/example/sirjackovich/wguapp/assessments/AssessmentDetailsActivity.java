@@ -9,13 +9,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,8 +18,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.sirjackovich.wguapp.DatabaseHelper;
-import com.example.sirjackovich.wguapp.GoalReceiver;
 import com.example.sirjackovich.wguapp.ItemProvider;
+import com.example.sirjackovich.wguapp.NotificationReceiver;
 import com.example.sirjackovich.wguapp.R;
 
 import java.text.DateFormat;
@@ -37,6 +32,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
   private EditText title;
   private Spinner spinner;
   private EditText dueDate;
+  private CheckBox checkBox;
   private String action;
   private String assessmentFilter;
   private String assessmentID;
@@ -51,6 +47,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
     title = (EditText) findViewById(R.id.title_edit_text);
     dueDate = (EditText) findViewById(R.id.due_date_edit_text);
     spinner = (Spinner) findViewById(R.id.type_spinner);
+    checkBox = (CheckBox) findViewById(R.id.due_date_alert_check_box);
 
     // Create an ArrayAdapter using the string array and a default spinner layout
     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -77,6 +74,9 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         title.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_TITLE)));
         spinner.setSelection(adapter.getPosition(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_TYPE))));
         dueDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_DUE_DATE)));
+        if(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.ASSESSMENT_ALERT)) != 0){
+          checkBox.setChecked(true);
+        }
         cursor.close();
       }
     }
@@ -116,19 +116,10 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
       values.put(DatabaseHelper.ASSESSMENT_TYPE, spinner.getSelectedItem().toString().trim());
       values.put(DatabaseHelper.ASSESSMENT_DUE_DATE, dateString);
 
-      CheckBox checkbox = (CheckBox) findViewById(R.id.due_date_alert_check_box);
-
-      if (checkbox.isChecked()) {
-        Calendar calendar = Calendar.getInstance();
-        Date date = formatter.parse(dateString);
-        calendar.setTime(date);
-        long time = calendar.getTimeInMillis();
-        Intent intent = new Intent(AssessmentDetailsActivity.this, GoalReceiver.class);
-        Uri uri = Uri.parse(ItemProvider.ASSESSMENTS_CONTENT_URI + "/" + assessmentID);
-        intent.putExtra("Assessment", uri);
-        PendingIntent sender = PendingIntent.getBroadcast(AssessmentDetailsActivity.this, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, time, sender);
+      if (checkBox.isChecked()) {
+        values.put(DatabaseHelper.ASSESSMENT_ALERT, 1);
+      }else{
+        values.put(DatabaseHelper.ASSESSMENT_ALERT, 0);
       }
 
       switch (action) {
@@ -138,6 +129,22 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         case Intent.ACTION_EDIT:
           updateAssessment(values);
       }
+
+      if (checkBox.isChecked()) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = formatter.parse(dateString);
+        calendar.setTime(date);
+        long time = calendar.getTimeInMillis();
+        Intent intent = new Intent(AssessmentDetailsActivity.this, NotificationReceiver.class);
+        Uri uri = Uri.parse(ItemProvider.ASSESSMENTS_CONTENT_URI + "/" + assessmentID);
+        intent.putExtra("Assessment", uri);
+        intent.putExtra("type", "Assessment");
+        intent.setAction(Long.toString(System.currentTimeMillis()));
+        PendingIntent sender = PendingIntent.getBroadcast(AssessmentDetailsActivity.this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, sender);
+      }
+
       finish();
     } else {
       Toast.makeText(this, R.string.valid_date_string, Toast.LENGTH_LONG).show();
@@ -150,7 +157,10 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
   }
 
   private void insertAssessment(ContentValues values) {
-    getContentResolver().insert(ItemProvider.ASSESSMENTS_CONTENT_URI, values);
+    Uri uri = getContentResolver().insert(ItemProvider.ASSESSMENTS_CONTENT_URI, values);
+    if (uri != null) {
+      assessmentID = uri.getLastPathSegment();
+    }
     setResult(RESULT_OK);
   }
 }

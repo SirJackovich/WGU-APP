@@ -54,10 +54,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public static final String ASSESSMENT_TYPE = "type";
   public static final String ASSESSMENT_TITLE = "title";
   public static final String ASSESSMENT_DUE_DATE = "dueDate";
+  public static final String ASSESSMENT_ALERT = "alert";
   public static final String ASSESSMENT_COURSE_ID = "courseID";
   public static final String ASSESSMENT_CREATED = "created";
 
-  public static final String[] ASSESSMENT_COLUMNS = {ASSESSMENT_ID, ASSESSMENT_TYPE, ASSESSMENT_TITLE, ASSESSMENT_DUE_DATE, ASSESSMENT_COURSE_ID, ASSESSMENT_CREATED};
+  public static final String[] ASSESSMENT_COLUMNS = {ASSESSMENT_ID, ASSESSMENT_TYPE, ASSESSMENT_TITLE, ASSESSMENT_DUE_DATE, ASSESSMENT_ALERT, ASSESSMENT_COURSE_ID, ASSESSMENT_CREATED};
 
   private static final String CREATE_ASSESSMENTS_TABLE =
     "create table " + ASSESSMENTS_TABLE + " ( " +
@@ -65,6 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       ASSESSMENT_TYPE + " text, " +
       ASSESSMENT_TITLE + " text, " +
       ASSESSMENT_DUE_DATE + " text, " +
+      ASSESSMENT_ALERT + " int default 0, " +
       ASSESSMENT_COURSE_ID + " integer, " +
       ASSESSMENT_CREATED + " text default CURRENT_TIMESTAMP, " +
       "FOREIGN KEY(" + ASSESSMENT_COURSE_ID + ") REFERENCES " + COURSES_TABLE + "(" + COURSE_ID + " ))";
