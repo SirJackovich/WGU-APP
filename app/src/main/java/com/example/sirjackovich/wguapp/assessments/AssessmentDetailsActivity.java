@@ -145,6 +145,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         alarmManager.set(AlarmManager.RTC_WAKEUP, time, sender);
       }
 
+      setResult(RESULT_OK);
       finish();
     } else {
       Toast.makeText(this, R.string.valid_date_string, Toast.LENGTH_LONG).show();
@@ -153,7 +154,6 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
 
   private void updateAssessment(ContentValues values) {
     getContentResolver().update(ItemProvider.ASSESSMENTS_CONTENT_URI, values, assessmentFilter, null);
-    setResult(RESULT_OK);
   }
 
   private void insertAssessment(ContentValues values) {
@@ -161,6 +161,5 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
     if (uri != null) {
       assessmentID = uri.getLastPathSegment();
     }
-    setResult(RESULT_OK);
   }
 }

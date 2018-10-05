@@ -1,24 +1,38 @@
 package com.example.sirjackovich.wguapp.courses;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.sirjackovich.wguapp.DatabaseHelper;
 import com.example.sirjackovich.wguapp.ItemProvider;
+import com.example.sirjackovich.wguapp.NotificationReceiver;
 import com.example.sirjackovich.wguapp.R;
+import com.example.sirjackovich.wguapp.assessments.AssessmentDetailsActivity;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class CourseDetailsActivity extends AppCompatActivity {
   private EditText title;
   private EditText startDate;
+  private CheckBox startCheckBox;
   private EditText endDate;
+  private CheckBox endCheckbox;
   private EditText status;
   private EditText note;
   private String action;
@@ -26,6 +40,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
   private String courseID;
   private ArrayList<String> assessments;
   private ArrayList<String> mentors;
+  final DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +49,9 @@ public class CourseDetailsActivity extends AppCompatActivity {
 
     title = (EditText) findViewById(R.id.title_edit_text);
     startDate = (EditText) findViewById(R.id.start_date_edit_text);
+    startCheckBox = (CheckBox) findViewById(R.id.start_date_alert_check_box);
     endDate = (EditText) findViewById(R.id.end_date_edit_text);
+    endCheckbox = (CheckBox) findViewById(R.id.end_date_alert_check_box);
     status = (EditText) findViewById(R.id.status_edit_text);
     note = (EditText) findViewById(R.id.note_edit_text);
 
@@ -56,7 +73,13 @@ public class CourseDetailsActivity extends AppCompatActivity {
         cursor.moveToFirst();
         title.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COURSE_TITLE)));
         startDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COURSE_START_DATE)));
+        if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COURSE_START_DATE_ALERT)) != 0) {
+          startCheckBox.setChecked(true);
+        }
         endDate.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COURSE_END_DATE)));
+        if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COURSE_END_DATE_ALERT)) != 0) {
+          endCheckbox.setChecked(true);
+        }
         status.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COURSE_STATUS)));
         note.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COURSE_NOTE)));
         cursor.close();
@@ -106,24 +129,83 @@ public class CourseDetailsActivity extends AppCompatActivity {
     finish();
   }
 
-  public void handleSave(View view) {
-    ContentValues values = new ContentValues();
-    values.put(DatabaseHelper.COURSE_TITLE, title.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_START_DATE, startDate.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_END_DATE, endDate.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_STATUS, status.getText().toString().trim());
-    values.put(DatabaseHelper.COURSE_NOTE, note.getText().toString().trim());
-    switch (action) {
-      case Intent.ACTION_INSERT:
-        courseID = insertCourse(values);
-        addAssessments();
-        addMentors();
-        break;
-      case Intent.ACTION_EDIT:
-        updateCourse(values);
+  public boolean isDateValid(String date) {
+    try {
+      formatter.setLenient(false);
+      formatter.parse(date);
+      return true;
+    } catch (ParseException e) {
+      return false;
     }
-    setResult(RESULT_OK);
-    finish();
+  }
+
+  public void handleSave(View view) throws ParseException {
+    ContentValues values = new ContentValues();
+    String startDateString = startDate.getText().toString().trim();
+    String endDateString = endDate.getText().toString().trim();
+    if (isDateValid(startDateString) && isDateValid(startDateString)) {
+      values.put(DatabaseHelper.COURSE_TITLE, title.getText().toString().trim());
+      values.put(DatabaseHelper.COURSE_START_DATE, startDateString);
+      if (startCheckBox.isChecked()) {
+        values.put(DatabaseHelper.COURSE_START_DATE_ALERT, 1);
+      } else {
+        values.put(DatabaseHelper.COURSE_START_DATE_ALERT, 0);
+      }
+      values.put(DatabaseHelper.COURSE_END_DATE, endDateString);
+      if (endCheckbox.isChecked()) {
+        values.put(DatabaseHelper.COURSE_END_DATE_ALERT, 1);
+      } else {
+        values.put(DatabaseHelper.COURSE_END_DATE_ALERT, 0);
+      }
+      values.put(DatabaseHelper.COURSE_STATUS, status.getText().toString().trim());
+      values.put(DatabaseHelper.COURSE_NOTE, note.getText().toString().trim());
+
+      switch (action) {
+        case Intent.ACTION_INSERT:
+          courseID = insertCourse(values);
+          addAssessments();
+          addMentors();
+          break;
+        case Intent.ACTION_EDIT:
+          updateCourse(values);
+      }
+
+      if (startCheckBox.isChecked()) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = formatter.parse(startDateString);
+        calendar.setTime(date);
+        long time = calendar.getTimeInMillis();
+        Intent intent = new Intent(CourseDetailsActivity.this, NotificationReceiver.class);
+        Uri uri = Uri.parse(ItemProvider.COURSES_CONTENT_URI + "/" + courseID);
+        intent.putExtra("Course", uri);
+        intent.putExtra("type", "CourseStart");
+        intent.setAction(Long.toString(System.currentTimeMillis()));
+        PendingIntent sender = PendingIntent.getBroadcast(CourseDetailsActivity.this, 1, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, sender);
+      }
+
+      if (endCheckbox.isChecked()) {
+        Calendar endCalendar = Calendar.getInstance();
+        Date endDate = formatter.parse(endDateString);
+        endCalendar.setTime(endDate);
+        long endTime = endCalendar.getTimeInMillis();
+        Intent endIntent = new Intent(CourseDetailsActivity.this, NotificationReceiver.class);
+        Uri endUri = Uri.parse(ItemProvider.COURSES_CONTENT_URI + "/" + courseID);
+        endIntent.putExtra("Course", endUri);
+        endIntent.putExtra("type", "CourseEnd");
+        endIntent.setAction(Long.toString(System.currentTimeMillis()));
+        PendingIntent endSender = PendingIntent.getBroadcast(CourseDetailsActivity.this, 2, endIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, endTime, endSender);
+      }
+
+      setResult(RESULT_OK);
+      finish();
+
+    } else {
+      Toast.makeText(this, R.string.valid_date_string, Toast.LENGTH_LONG).show();
+    }
   }
 
   private void addAssessments() {
@@ -158,7 +240,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
 
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if(action.equals(Intent.ACTION_INSERT)){
+    if (action.equals(Intent.ACTION_INSERT)) {
       if (requestCode == 1) {
         if (resultCode == RESULT_OK) {
           assessments = data.getStringArrayListExtra("Assessments");

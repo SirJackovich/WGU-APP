@@ -77,7 +77,38 @@
             android:id="@+id/start_date_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="date" />
+            android:hint="@string/date_format_text"
+            android:inputType="datetime" />
+        </RelativeLayout>
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1">
+
+          <TextView
+            android:id="@+id/start_date_alert_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/alert_text"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1">
+
+          <CheckBox
+            android:id="@+id/start_date_alert_check_box"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
         </RelativeLayout>
       </LinearLayout>
 
@@ -108,7 +139,38 @@
             android:id="@+id/end_date_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="date" />
+            android:hint="@string/date_format_text"
+            android:inputType="datetime" />
+        </RelativeLayout>
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1">
+
+          <TextView
+            android:id="@+id/end_date_alert_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/alert_text"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1">
+
+          <CheckBox
+            android:id="@+id/end_date_alert_check_box"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
         </RelativeLayout>
       </LinearLayout>
 

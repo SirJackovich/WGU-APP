@@ -69,7 +69,8 @@
         android:id="@+id/start_date_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="date"/>
+        android:hint="@string/date_format_text"
+        android:inputType="datetime"/>
     </RelativeLayout>
   </LinearLayout>
 
@@ -100,7 +101,8 @@
         android:id="@+id/end_date_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="date"/>
+        android:hint="@string/date_format_text"
+        android:inputType="datetime"/>
     </RelativeLayout>
   </LinearLayout>
 

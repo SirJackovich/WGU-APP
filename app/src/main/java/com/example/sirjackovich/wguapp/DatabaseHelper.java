@@ -29,20 +29,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public static final String COURSE_ID = "_id";
   public static final String COURSE_TITLE = "title";
   public static final String COURSE_START_DATE = "startDate";
+  public static final String COURSE_START_DATE_ALERT = "startDateAlert";
   public static final String COURSE_END_DATE = "endDate";
+  public static final String COURSE_END_DATE_ALERT = "endDateAlert";
   public static final String COURSE_STATUS = "status";
   public static final String COURSE_NOTE = "note";
-    public static final String COURSE_TERM_ID = "termID";
+  public static final String COURSE_TERM_ID = "termID";
   public static final String COURSE_CREATED = "created";
 
-  public static final String[] COURSE_COLUMNS = {COURSE_ID, COURSE_TITLE, COURSE_START_DATE, COURSE_END_DATE, COURSE_STATUS, COURSE_NOTE, COURSE_TERM_ID, COURSE_CREATED};
+  public static final String[] COURSE_COLUMNS = {COURSE_ID, COURSE_TITLE, COURSE_START_DATE, COURSE_START_DATE_ALERT, COURSE_END_DATE, COURSE_END_DATE_ALERT, COURSE_STATUS, COURSE_NOTE, COURSE_TERM_ID, COURSE_CREATED};
 
   private static final String CREATE_COURSES_TABLE =
     "create table " + COURSES_TABLE + " ( " +
       COURSE_ID + " integer primary key autoincrement, " +
       COURSE_TITLE + " text, " +
       COURSE_START_DATE + " text, " +
+      COURSE_START_DATE_ALERT + " int default 0, " +
       COURSE_END_DATE + " text, " +
+      COURSE_END_DATE_ALERT + " int default 0, " +
       COURSE_STATUS + " text, " +
       COURSE_NOTE + " text, " +
       COURSE_TERM_ID + " integer, " +
@@ -76,7 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public static final String MENTOR_NAME = "name";
   public static final String MENTOR_PHONE = "phone";
   public static final String MENTOR_EMAIL = "email";
-  public static final String MENTOR_COURSE_ID ="courseID";
+  public static final String MENTOR_COURSE_ID = "courseID";
   public static final String MENTOR_CREATED = "created";
 
   public static final String[] MENTOR_COLUMNS = {MENTOR_ID, MENTOR_NAME, MENTOR_PHONE, MENTOR_EMAIL, MENTOR_COURSE_ID, MENTOR_CREATED};
