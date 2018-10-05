@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:focusableInTouchMode="true"
-  android:paddingBottom="@dimen/activity_vertical_margin"
-  android:paddingLeft="@dimen/activity_horizontal_margin"
-  android:paddingRight="@dimen/activity_horizontal_margin"
-  android:paddingTop="@dimen/activity_vertical_margin"
-  tools:context="com.example.sirjackovich.wguapp.courses.CourseDetailsActivity">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            tools:context="com.example.sirjackovich.wguapp.courses.CourseDetailsActivity">
 
   <ScrollView
     android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:id="@+id/title_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title_text" />
+            android:text="@string/title_text"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -46,7 +46,7 @@
             android:id="@+id/title_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"/>
         </RelativeLayout>
       </LinearLayout>
 
@@ -65,7 +65,7 @@
             android:id="@+id/start_date_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start_date_text" />
+            android:text="@string/start_date_text"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -78,7 +78,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/date_format_text"
-            android:inputType="datetime" />
+            android:inputType="datetime"/>
         </RelativeLayout>
       </LinearLayout>
 
@@ -127,7 +127,7 @@
             android:id="@+id/end_date_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/end_date_text" />
+            android:text="@string/end_date_text"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -140,7 +140,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/date_format_text"
-            android:inputType="datetime" />
+            android:inputType="datetime"/>
         </RelativeLayout>
       </LinearLayout>
 
@@ -189,7 +189,7 @@
             android:id="@+id/status_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/status_text" />
+            android:text="@string/status_text"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -201,7 +201,7 @@
             android:id="@+id/status_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"/>
         </RelativeLayout>
       </LinearLayout>
 
@@ -220,7 +220,7 @@
             android:id="@+id/note_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/note_text" />
+            android:text="@string/note_text"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -232,7 +232,7 @@
             android:id="@+id/note_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"/>
         </RelativeLayout>
       </LinearLayout>
 
@@ -247,7 +247,7 @@
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           android:onClick="shareNote"
-          android:text="@string/share_text" />
+          android:text="@string/share_text"/>
       </LinearLayout>
 
       <LinearLayout
@@ -266,7 +266,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="handleMentors"
-            android:text="@string/mentors_text" />
+            android:text="@string/mentors_text"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -279,7 +279,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="handleAssessments"
-            android:text="@string/assessments_text" />
+            android:text="@string/assessments_text"/>
         </RelativeLayout>
       </LinearLayout>
 
@@ -299,7 +299,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="handleDelete"
-            android:text="@string/delete_text" />
+            android:text="@string/delete_text"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -312,9 +312,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="handleSave"
-            android:text="@string/save_text" />
+            android:text="@string/save_text"/>
         </RelativeLayout>
       </LinearLayout>
     </LinearLayout>
   </ScrollView>
-</RelativeLayout>
+</ScrollView>

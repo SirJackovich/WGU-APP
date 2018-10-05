@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  android:paddingBottom="@dimen/activity_vertical_margin"
-  android:paddingLeft="@dimen/activity_horizontal_margin"
-  android:paddingRight="@dimen/activity_horizontal_margin"
-  android:paddingTop="@dimen/activity_vertical_margin"
-  tools:context="com.example.sirjackovich.wguapp.mentors.MentorDetailsActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              tools:context="com.example.sirjackovich.wguapp.mentors.MentorDetailsActivity">
 
 
   <LinearLayout
@@ -26,7 +26,7 @@
         android:id="@+id/name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/name_text" />
+        android:text="@string/name_text"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -38,7 +38,7 @@
         android:id="@+id/name_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"/>
     </RelativeLayout>
   </LinearLayout>
 
@@ -57,7 +57,7 @@
         android:id="@+id/phone_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/phone_text" />
+        android:text="@string/phone_text"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -69,7 +69,7 @@
         android:id="@+id/phone_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="phone" />
+        android:inputType="phone"/>
     </RelativeLayout>
   </LinearLayout>
 
@@ -88,7 +88,7 @@
         android:id="@+id/email_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/email_text" />
+        android:text="@string/email_text"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -100,7 +100,7 @@
         android:id="@+id/email_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"/>
     </RelativeLayout>
   </LinearLayout>
 
@@ -120,7 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="handleDelete"
-        android:text="@string/delete_text" />
+        android:text="@string/delete_text"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -133,7 +133,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="handleSave"
-        android:text="@string/save_text" />
+        android:text="@string/save_text"/>
     </RelativeLayout>
   </LinearLayout>
 </LinearLayout>

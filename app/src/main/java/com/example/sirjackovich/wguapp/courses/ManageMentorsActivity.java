@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
@@ -22,13 +21,11 @@ import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ManageMentorsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
   private String action;
   private ArrayList<String> mentors;
   private String courseID;
-  private String courseFilter;
   private CheckBoxAdapter adapter;
 
   @Override

@@ -18,7 +18,6 @@ import com.example.sirjackovich.wguapp.DatabaseHelper;
 import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.NotificationReceiver;
 import com.example.sirjackovich.wguapp.R;
-import com.example.sirjackovich.wguapp.assessments.AssessmentDetailsActivity;
 
 import java.text.DateFormat;
 import java.text.ParseException;

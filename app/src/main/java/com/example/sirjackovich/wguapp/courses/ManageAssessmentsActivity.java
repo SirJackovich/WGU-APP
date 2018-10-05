@@ -26,7 +26,6 @@ public class ManageAssessmentsActivity extends AppCompatActivity implements Load
   private String action;
   private ArrayList<String> assessments;
   private String courseID;
-  private String courseFilter;
   private CheckBoxAdapter adapter;
 
   @Override
