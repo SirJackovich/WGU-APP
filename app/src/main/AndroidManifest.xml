@@ -108,6 +108,10 @@
       android:authorities="com.example.sirjackovich.itemprovider"
       android:exported="false"/>
 
+    <receiver
+      android:name=".GoalReceiver"
+      android:enabled="true"
+      android:exported="true" />
 
   </application>
 

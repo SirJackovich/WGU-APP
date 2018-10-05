@@ -1,5 +1,6 @@
 package com.example.sirjackovich.wguapp.assessments;
 
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -7,17 +8,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.sirjackovich.wguapp.GoalReceiver;
 import com.example.sirjackovich.wguapp.DatabaseHelper;
+import com.example.sirjackovich.wguapp.GoalReceiver;
 import com.example.sirjackovich.wguapp.ItemProvider;
 import com.example.sirjackovich.wguapp.R;
 
@@ -33,6 +39,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
   private EditText dueDate;
   private String action;
   private String assessmentFilter;
+  private String assessmentID;
   final DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
   @Override
@@ -62,7 +69,8 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
       setTitle(getString(R.string.new_assessment));
     } else {
       action = Intent.ACTION_EDIT;
-      assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + uri.getLastPathSegment();
+      assessmentID = uri.getLastPathSegment();
+      assessmentFilter = DatabaseHelper.ASSESSMENT_ID + "=" + assessmentID;
       Cursor cursor = getContentResolver().query(uri, DatabaseHelper.ASSESSMENT_COLUMNS, assessmentFilter, null, null);
       if (cursor != null) {
         cursor.moveToFirst();
@@ -116,6 +124,8 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         calendar.setTime(date);
         long time = calendar.getTimeInMillis();
         Intent intent = new Intent(AssessmentDetailsActivity.this, GoalReceiver.class);
+        Uri uri = Uri.parse(ItemProvider.ASSESSMENTS_CONTENT_URI + "/" + assessmentID);
+        intent.putExtra("Assessment", uri);
         PendingIntent sender = PendingIntent.getBroadcast(AssessmentDetailsActivity.this, 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, time, sender);

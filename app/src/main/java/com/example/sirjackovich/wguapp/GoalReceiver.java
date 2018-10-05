@@ -1,50 +1,39 @@
 package com.example.sirjackovich.wguapp;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
+import com.example.sirjackovich.wguapp.assessments.AssessmentDetailsActivity;
 
 public class GoalReceiver extends BroadcastReceiver {
 
-  static int notificationID;
+  static int notificationID = 0;
 
   @Override
   public void onReceive(Context context, Intent intent) {
 
-//    NotificationCompat.Builder builder =
-//      new NotificationCompat.Builder(this)
-//        .setSmallIcon(R.mipmap.ic_launcher)
-//        .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher))
-//        .setContentTitle("Notifications Example")
-//        .setContentText("This is a test notification");
-//
-//    Intent notificationIntent = new Intent(this, MainActivity.class);
-//    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-//      PendingIntent.FLAG_UPDATE_CURRENT);
-//    builder.setContentIntent(contentIntent);
-//
-//    // Add as notification
-//    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//    manager.notify(0, builder.build());
+    Uri uri = intent.getParcelableExtra("Assessment");
 
+    Intent newIntent = new Intent(context, AssessmentDetailsActivity.class);
+    newIntent.putExtra("Assessment", uri);
 
-    Notification notification = new NotificationCompat.Builder(context)
+    PendingIntent pIntent = PendingIntent.getActivity(context, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
       .setSmallIcon(R.mipmap.ic_launcher)
       .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-      .setContentText("Assessment Goal Alert")
-      .setContentTitle("The time is now! Finish your assessment today.").build();
+      .setContentText("Finish your assessment today.")
+      .setContentTitle("Assessment Goal Alert")
+      .setContentIntent(pIntent)
+      .setAutoCancel(true);
 
-    NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-    notificationManager.notify(notificationID++, notification);
-
-
+    NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    notificationmanager.notify(notificationID++, builder.build());
   }
-
 }
